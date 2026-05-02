@@ -1,0 +1,43 @@
+using System.Linq;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using ReLPC.Models;
+using ReLPC.Services;
+
+namespace ReLPC.ViewModels;
+
+public partial class SignUpWindowViewModel(
+    ISessionService sessionService,
+    IDatabaseService databaseService,
+    IWindowService windowService) : ViewModelBase
+{
+    [ObservableProperty] public partial string? Username { get; set; }
+
+    [ObservableProperty] public partial string? Password { get; set; }
+
+    [ObservableProperty] public partial string? PasswordConfirmation { get; set; }
+
+    [RelayCommand]
+    private void AttemptSignup()
+    {
+        if (string.IsNullOrEmpty(Username) || string.IsNullOrEmpty(Password) ||
+            string.IsNullOrEmpty(PasswordConfirmation))
+            return;
+
+        if (!Username.All(c => char.IsDigit(c) || c == '-'))
+            return;
+
+        if (Password != PasswordConfirmation)
+            return;
+
+        var profile = new UserProfile
+        {
+            Username = Username,
+            PasswordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(Password),
+        };
+
+        databaseService.UpsertUser(profile);
+
+        windowService.FindWindowFromDataModel(this)?.Close();
+    }
+}

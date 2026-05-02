@@ -1,0 +1,31 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:ReLPC.ViewModels"
+        xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+        x:Class="ReLPC.Views.MainWindowView"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="ReLPC">
+
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainWindowViewModel />
+    </Design.DataContext>
+
+    <Grid ColumnDefinitions="*,15*">
+        <StackPanel Grid.Column="0">
+            <Button Command="{Binding ImportCommand}" Content="Import Data" />
+            <CheckBox Content="Linear" IsChecked="{Binding LinearVisible}"/>
+            <CheckBox Content="Polynomial" IsChecked="{Binding PolynomialVisible}"/>
+        </StackPanel>
+        <Grid Column="1">
+            <lvc:CartesianChart ZoomMode="Both" Series="{Binding Series}" />
+        </Grid>
+
+    </Grid>
+
+</Window>

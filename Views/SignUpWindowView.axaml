@@ -1,0 +1,103 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:ReLPC.ViewModels"
+        mc:Ignorable="d"
+        d:DesignWidth="800" d:DesignHeight="600"
+        Width="800" Height="600"
+        MinWidth="800" MinHeight="600"
+        x:Class="ReLPC.Views.SignUpWindowView"
+        x:DataType="vm:SignUpWindowViewModel"
+        Title="Sign Up">
+    <Grid Background="#FF5A47">
+        <Border Margin="28"
+                CornerRadius="24"
+                Background="#40FFFFFF"
+                BorderBrush="#80FFFFFF"
+                BorderThickness="1.2"
+                BoxShadow="0 10 30 0 rgba(0,0,0,0.25)">
+
+            <StackPanel HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Spacing="20">
+
+                <!-- Title -->
+                <TextBlock Text="Sign Up"
+                           Foreground="#F5F5F5"
+                           FontSize="40"
+                           FontWeight="Bold"
+                           HorizontalAlignment="Center" />
+
+                <StackPanel Width="400" Spacing="16">
+
+                    <!-- STUDENT ID -->
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="STUDENT ID"
+                                   Foreground="#EAEAEA"
+                                   FontWeight="SemiBold" />
+                        <TextBox Height="48"
+                                 FontSize="20"
+                                 Background="#20FFFFFF"
+                                 BorderBrush="#80FFFFFF"
+                                 BorderThickness="1.2"
+                                 CornerRadius="10"
+                                 Padding="12"
+                                 Foreground="Red"
+                                 Text="{Binding Username}" />
+                    </StackPanel>
+
+                    <!-- PASSWORD -->
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="PASSWORD"
+                                   Foreground="#EAEAEA"
+                                   FontWeight="SemiBold" />
+                        <TextBox Height="48"
+                                 FontSize="20"
+                                 Background="#20FFFFFF"
+                                 BorderBrush="#80FFFFFF"
+                                 BorderThickness="1.2"
+                                 CornerRadius="10"
+                                 Padding="12"
+                                 Foreground="Red"
+                                 PasswordChar="●"
+                                 Text="{Binding Password}" />
+                    </StackPanel>
+
+                    <!-- CONFIRM PASSWORD -->
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="CONFIRM PASSWORD"
+                                   Foreground="#EAEAEA"
+                                   FontWeight="SemiBold" />
+                        <TextBox Height="48"
+                                 FontSize="20"
+                                 Background="#20FFFFFF"
+                                 BorderBrush="#80FFFFFF"
+                                 BorderThickness="1.2"
+                                 CornerRadius="10"
+                                 Padding="12"
+                                 Foreground="Red"
+                                 PasswordChar="●"
+                                 Text="{Binding PasswordConfirmation}" />
+                    </StackPanel>
+
+                    <!-- BUTTON -->
+                    <Button Content="SIGN UP"
+                            Width="200"
+                            Height="48"
+                            Background="#80FFFFFF"
+                            Foreground="#ff3131"
+                            CornerRadius="24"
+                            HorizontalAlignment="Center"
+                            HorizontalContentAlignment="Center"
+                            VerticalContentAlignment="Center"
+                            FontSize="18"
+                            FontWeight="SemiBold"
+                            Margin="0,12,0,0"
+                            Command="{Binding AttemptSignupCommand}" />
+
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
