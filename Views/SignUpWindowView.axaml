@@ -126,6 +126,11 @@
                             Command="{Binding AttemptSignupCommand}" />
 
                 </StackPanel>
+                <TextBlock Text="{Binding SignupStatus}"
+                           Foreground="White"
+                           FontWeight="Bold"
+                           FontSize="24"
+                           HorizontalAlignment="Center" />
             </StackPanel>
         </Border>
     </Grid>
