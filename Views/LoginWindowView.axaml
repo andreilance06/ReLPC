@@ -12,6 +12,10 @@
         Title="ReLPC - Login">
 
     <Window.Styles>
+        <Style Selector="ToggleButton">
+            <Setter Property="IsTabStop" Value="False" />
+        </Style>
+
         <Style Selector="ToggleButton Image">
             <Setter Property="Source" Value="/Assets/elements/pass-open.png" />
         </Style>
