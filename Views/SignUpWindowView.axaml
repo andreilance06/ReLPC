@@ -10,6 +10,21 @@
         x:Class="ReLPC.Views.SignUpWindowView"
         x:DataType="vm:SignUpWindowViewModel"
         Title="Sign Up">
+
+    <Window.Styles>
+        <Style Selector="ToggleButton Image">
+            <Setter Property="Source" Value="/Assets/elements/pass-open.png" />
+        </Style>
+
+        <Style Selector="ToggleButton:checked Image">
+            <Setter Property="Source" Value="/Assets/elements/pass-close.png" />
+        </Style>
+
+        <Style Selector="ToggleButton:checked /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+    </Window.Styles>
+
     <Grid Background="#FF5A47">
         <Border Margin="28"
                 CornerRadius="24"
@@ -24,7 +39,7 @@
 
                 <!-- Title -->
                 <TextBlock Text="Sign Up"
-                           Foreground="#F5F5F5"
+                           Foreground="White"
                            FontSize="40"
                            FontWeight="Bold"
                            HorizontalAlignment="Center" />
@@ -34,12 +49,12 @@
                     <!-- STUDENT ID -->
                     <StackPanel Spacing="6">
                         <TextBlock Text="STUDENT ID"
-                                   Foreground="#EAEAEA"
+                                   Foreground="White"
                                    FontWeight="SemiBold" />
                         <TextBox Height="48"
                                  FontSize="20"
-                                 Background="#20FFFFFF"
-                                 BorderBrush="#80FFFFFF"
+                                 Background="White"
+                                 BorderBrush="White"
                                  BorderThickness="1.2"
                                  CornerRadius="10"
                                  Padding="12"
@@ -50,42 +65,56 @@
                     <!-- PASSWORD -->
                     <StackPanel Spacing="6">
                         <TextBlock Text="PASSWORD"
-                                   Foreground="#EAEAEA"
+                                   Foreground="White"
                                    FontWeight="SemiBold" />
                         <TextBox Height="48"
                                  FontSize="20"
-                                 Background="#20FFFFFF"
-                                 BorderBrush="#80FFFFFF"
+                                 Background="White"
+                                 BorderBrush="White"
                                  BorderThickness="1.2"
                                  CornerRadius="10"
                                  Padding="12"
                                  Foreground="Red"
-                                 PasswordChar="●"
-                                 Text="{Binding Password}" />
+                                 PasswordChar="{Binding PasswordChar1}"
+                                 Text="{Binding Password}">
+                            <TextBox.InnerRightContent>
+                                <ToggleButton
+                                    IsChecked="{Binding HidePassword1}">
+                                    <Image />
+                                </ToggleButton>
+                            </TextBox.InnerRightContent>
+                        </TextBox>
                     </StackPanel>
 
                     <!-- CONFIRM PASSWORD -->
                     <StackPanel Spacing="6">
                         <TextBlock Text="CONFIRM PASSWORD"
-                                   Foreground="#EAEAEA"
+                                   Foreground="White"
                                    FontWeight="SemiBold" />
                         <TextBox Height="48"
                                  FontSize="20"
-                                 Background="#20FFFFFF"
-                                 BorderBrush="#80FFFFFF"
+                                 Background="White"
+                                 BorderBrush="White"
                                  BorderThickness="1.2"
                                  CornerRadius="10"
                                  Padding="12"
                                  Foreground="Red"
-                                 PasswordChar="●"
-                                 Text="{Binding PasswordConfirmation}" />
+                                 PasswordChar="{Binding PasswordChar2}"
+                                 Text="{Binding PasswordConfirmation}">
+                            <TextBox.InnerRightContent>
+                                <ToggleButton
+                                    IsChecked="{Binding HidePassword2}">
+                                    <Image />
+                                </ToggleButton>
+                            </TextBox.InnerRightContent>
+                        </TextBox>
                     </StackPanel>
 
                     <!-- BUTTON -->
                     <Button Content="SIGN UP"
                             Width="200"
                             Height="48"
-                            Background="#80FFFFFF"
+                            Background="White"
                             Foreground="#ff3131"
                             CornerRadius="24"
                             HorizontalAlignment="Center"
