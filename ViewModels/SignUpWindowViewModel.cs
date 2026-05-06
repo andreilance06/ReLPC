@@ -11,11 +11,11 @@ public partial class SignUpWindowViewModel(
     IDatabaseService databaseService,
     IWindowService windowService) : ViewModelBase
 {
-    [ObservableProperty] public partial string? Username { get; set; }
+    public string? Username { get; set; }
 
-    [ObservableProperty] public partial string? Password { get; set; }
+    public string? Password { get; set; }
 
-    [ObservableProperty] public partial string? PasswordConfirmation { get; set; }
+    public string? PasswordConfirmation { get; set; }
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(PasswordChar1))]
