@@ -3,29 +3,173 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:ReLPC.ViewModels"
-        xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
-        mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
+        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
         x:Class="ReLPC.Views.MainWindowView"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="ReLPC">
+        Title="ReLPC"
+        Background="#20100B">
 
-    <Design.DataContext>
-        <!-- This only sets the DataContext for the previewer in an IDE,
-             to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
-        <vm:MainWindowViewModel />
-    </Design.DataContext>
+    <Grid>
+        <Canvas Opacity="0.80">
+            <Rectangle Width="2e6"
+                       Height="{Binding $parent.Bounds.Height}"
+                       Canvas.Top="-220"
+                       Canvas.Left="-1e6"
+                       Fill="#ff3131" />
+            <Rectangle Width="2e6"
+                       Height="{Binding $parent.Bounds.Height}"
+                       Canvas.Bottom="-360"
+                       Canvas.Left="-1e6"
+                       Fill="#ff7846" />
+            <Canvas.Effect>
+                <BlurEffect Radius="500" />
+            </Canvas.Effect>
+        </Canvas>
 
-    <Grid ColumnDefinitions="*,15*">
-        <StackPanel Grid.Column="0">
-            <Button Command="{Binding ImportCommand}" Content="Import Data" />
-            <CheckBox Content="Linear" IsChecked="{Binding LinearVisible}"/>
-            <CheckBox Content="Polynomial" IsChecked="{Binding PolynomialVisible}"/>
-        </StackPanel>
-        <Grid Column="1">
-            <lvc:CartesianChart ZoomMode="Both" Series="{Binding Series}" />
-        </Grid>
+        <Border Margin="8">
+            <Grid ColumnDefinitions="60, 160, 500, *"
+                  ColumnSpacing="3">
+
+                <!-- icon rail -->
+                <Border Grid.Column="0" CornerRadius="8">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                            <GradientStop Color="#CCFF4E3B" Offset="0" />
+                            <GradientStop Color="#ff3131" Offset=".5" />
+                            <GradientStop Color="#CFFF6A1E" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+
+                    <Grid RowDefinitions="Auto, *, Auto">
+                        <StackPanel Grid.Row="0"
+                                    Margin="10"
+                                    Spacing="16"
+                                    HorizontalAlignment="Center">
+                            <Button
+                                Padding="0"
+                                Background="Transparent">
+                                <Image Source="/Assets/elements/burger-menu.png" />
+                            </Button>
+                            <Button
+                                Padding="0"
+                                Background="Transparent">
+                                <Image Source="/Assets/elements/file-explorer.png" />
+                            </Button>
+                            <Button
+                                Padding="0"
+                                Background="Transparent">
+                                <Image Source="/Assets/elements/new-file.png" />
+                            </Button>
+                            <Button
+                                Padding="0"
+                                Background="Transparent">
+                                <Image Source="/Assets/elements/open-file.png" />
+                            </Button>
+                            <Button
+                                Padding="0"
+                                Background="Transparent">
+                                <Image Source="/Assets/elements/history.png" />
+                            </Button>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2"
+                                    Margin="10"
+                                    Spacing="16"
+                                    HorizontalAlignment="Center">
+                            <Button
+                                Padding="0"
+                                Background="Transparent">
+                                <Image Source="/Assets/elements/logout.png" />
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+
+
+                </Border>
+
+                <!-- data sets -->
+                <Border Grid.Column="1" CornerRadius="8" Background="White">
+                    <StackPanel Spacing="10"
+                                Margin="16, 24">
+                        <TextBlock Text="DATA SETS"
+                                   FontSize="14"
+                                   FontWeight="Black"
+                                   Foreground="#ff3131" />
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="SAMPLE SET 1"
+                                       FontSize="13"
+                                       Foreground="#ff3131" />
+                            <TextBlock Text="SAMPLE SET 2"
+                                       FontSize="13"
+                                       Foreground="#ff3131" />
+                            <TextBlock Text="SAMPLE SET 3"
+                                       FontSize="13"
+                                       Foreground="#ff3131" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- data entry -->
+                <Border Grid.Column="2" CornerRadius="8" Background="White">
+                    <Grid RowDefinitions="Auto, *, Auto"
+                          Margin="20, 10">
+                        <StackPanel Grid.Row="0">
+                            <TextBlock Text="DATA ENTRY"
+                                       FontFamily="Arial Black"
+                                       FontSize="40"
+                                       FontWeight="Black"
+                                       Foreground="#ff3131"
+                                       LetterSpacing="0" />
+                            <TextBlock Text="ENTER YOUR DATA (X, Y) BELOW"
+                                       Margin="4,-4,0,0"
+                                       FontSize="14"
+                                       Foreground="#ff3131" />
+                        </StackPanel>
+
+                        <!-- table of values -->
+                        <Grid Row="1"></Grid>
+
+                        <!-- calculation settings -->
+                        <Grid Row="2" ColumnDefinitions="*, Auto, Auto" ColumnSpacing="4">
+                            <TextBox Grid.Column="1"
+                                     Height="46"
+                                     FontSize="14"
+                                     Background="White"
+                                     Foreground="#ff3131"
+                                     BorderBrush="#ff3131"
+                                     BorderThickness="1"
+                                     CornerRadius="8"
+                                     Padding="14, 7"
+                                     VerticalContentAlignment="Center">
+                            </TextBox>
+                            <ComboBox Grid.Column="2"
+                                      SelectedIndex="0"
+                                      Height="46"
+                                      FontSize="14"
+                                      Background="White"
+                                      Foreground="#ff3131"
+                                      BorderBrush="#ff3131"
+                                      BorderThickness="1"
+                                      CornerRadius="8"
+                                      Padding="14, 7"
+                                      VerticalContentAlignment="Center">
+                                <ComboBoxItem Content="Linear Regression" />
+                                <ComboBoxItem Content="Polynomial Regression" />
+                                <ComboBoxItem Content="Both" />
+                            </ComboBox>
+                        </Grid>
+
+                    </Grid>
+                </Border>
+
+                <!-- calculation results -->
+                <Border Grid.Column="3" CornerRadius="8" Background="White">
+
+                </Border>
+            </Grid>
+        </Border>
+
 
     </Grid>
-
 </Window>
