@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ReLPC.Services;
 
@@ -13,23 +14,56 @@ public partial class LoginWindowViewModel(
 
     [ObservableProperty] public partial string Password { get; set; } = "";
 
-    [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(PasswordChar))]
-    public partial bool HidePassword { get; set; } = true;
+    [ObservableProperty] public partial string? LoginStatus { get; set; }
 
-    public string PasswordChar => HidePassword ? "\u25cf" : string.Empty;
-
-    [RelayCommand]
-    private void AttemptLogin()
+    [RelayCommand(AllowConcurrentExecutions = false)]
+    private async Task AttemptLogin()
     {
-        var profile = databaseService.GetProfileByUsername(Username);
-        if (profile is null) return;
+        LoginStatus = "";
+        var nextStatus = "";
+        // Goldilocks Delay
+        var minimumDelay = Task.Delay(1000);
 
-        if (!BCrypt.Net.BCrypt.EnhancedVerify(Password, profile.PasswordHash)) return;
+        try
+        {
+            if (string.IsNullOrWhiteSpace(Username))
+            {
+                nextStatus = "Enter your student ID.";
+                return;
+            }
 
-        sessionService.CurrentUser = profile;
-        windowService.CreateAndShowWindow(new MainWindowViewModel(sessionService, databaseService, windowService));
-        windowService.FindWindowFromDataModel(this)?.Close();
+            if (string.IsNullOrEmpty(Password))
+            {
+                nextStatus = "Enter your password.";
+                return;
+            }
+
+            var id = Username.Trim();
+
+            var profile = await Task.Run(() => databaseService.GetProfileByUsername(id));
+            if (profile is null)
+            {
+                nextStatus = "Unknown student ID.";
+                return;
+            }
+
+            var isCorrect = await Task.Run(() => !BCrypt.Net.BCrypt.EnhancedVerify(Password, profile.PasswordHash));
+            if (isCorrect)
+            {
+                nextStatus = "Incorrect password.";
+                return;
+            }
+
+            sessionService.CurrentUser = profile;
+            windowService.CreateAndShowWindow(new MainWindowViewModel(sessionService, databaseService, windowService));
+
+            windowService.FindWindowFromDataModel(this)?.Close();
+        }
+        finally
+        {
+            await minimumDelay;
+            LoginStatus = nextStatus;
+        }
     }
 
     [RelayCommand]

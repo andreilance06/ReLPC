@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using LiteDB;
 using ReLPC.Models;
 
@@ -7,7 +8,7 @@ public interface IDatabaseService
 {
     void UpsertUser(UserProfile user);
     UserProfile? GetProfileByUsername(string username);
-    void AddHistoryEntry(int userId, CalculatorInput entry);
+    void AddDataset(int userId, List<Point> dataset);
 }
 
 public class LiteDBService : IDatabaseService
@@ -34,14 +35,14 @@ public class LiteDBService : IDatabaseService
         db.GetCollection<UserProfile>("users").Upsert(user);
     }
 
-    public void AddHistoryEntry(int userId, CalculatorInput entry)
+    public void AddDataset(int userId, List<Point> entry)
     {
         using var db = new LiteDatabase(_dbPath);
         var col = db.GetCollection<UserProfile>("users");
         var user = col.FindById(userId);
 
         if (user is null) return;
-        user.History.Add(entry);
+        user.Datasets.Add(entry);
         col.Update(user);
     }
 }

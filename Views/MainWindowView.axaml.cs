@@ -1,4 +1,8 @@
+using System;
 using Avalonia.Controls;
+using Avalonia.Input;
+using Avalonia.Interactivity;
+using ReLPC.ViewModels;
 
 namespace ReLPC.Views;
 
@@ -7,5 +11,59 @@ public partial class MainWindowView : Window
     public MainWindowView()
     {
         InitializeComponent();
+    }
+
+    public void ToggleDashboard(object? sender, RoutedEventArgs? e)
+    {
+        if (MinDashboard.IsVisible)
+        {
+            MinDashboard.IsVisible = false;
+            MaxDashboard.IsVisible = true;
+        }
+        else
+        {
+            MinDashboard.IsVisible = true;
+            MaxDashboard.IsVisible = false;
+        }
+    }
+
+    public void ToggleDatasetPanel(object? sender, RoutedEventArgs? e)
+    {
+        DatasetPanel.IsVisible = !DatasetPanel.IsVisible;
+    }
+
+    private void DataGrid_OnCellEditEnding(object? sender, DataGridCellEditEndingEventArgs e)
+    {
+        if (DataContext is MainWindowViewModel vm)
+        {
+            vm.DatasetChanged();
+        }
+    }
+
+    private void InputElement_OnKeyDown(object? sender, KeyEventArgs e)
+    {
+        if (sender is not DataGrid dataGrid) return;
+        // Ignore navigation keys (arrows, tab, enter, escape) so they can still move around
+        if (e.Key is Key.Up or Key.Down or Key.Left or Key.Right or
+            Key.Tab or Key.Enter or Key.Escape)
+        {
+            return;
+        }
+
+        // If the user presses a normal character/number key and we aren't editing yet, force it open
+        if (dataGrid is { CurrentColumn: not null, IsReadOnly: false })
+        {
+            // This drops the cell into Edit mode instantly and triggers your PreparingCellForEdit event
+            dataGrid.BeginEdit();
+        }
+    }
+
+    private void DataGrid_OnCurrentCellChanged(object? sender, EventArgs e)
+    {
+        if (sender is DataGrid { CurrentColumn: not null, IsReadOnly: false } dataGrid)
+        {
+            // Forces the cell into Edit mode immediately on selection
+            dataGrid.BeginEdit();
+        }
     }
 }

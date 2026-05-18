@@ -44,18 +44,16 @@
     <Viewbox>
         <Grid Name="PageRoot" ColumnDefinitions="10*,9*" Width="1920" Height="1080" Background="Gray">
 
-            <Border Grid.Column="0" Margin="86">
-                <StackPanel>
-                    <TextBlock Text="READY TO CONTINUE?"
-                               FontSize="72"
-                               LineHeight="86"
-                               FontWeight="Black"
-                               Foreground="White" />
-                    <TextBlock Text="Start analyzing your data with Re:LPC"
-                               FontSize="36"
-                               Foreground="White" />
-                </StackPanel>
-            </Border>
+            <StackPanel Grid.Column="0" Margin="86">
+                <TextBlock Text="READY TO CONTINUE?"
+                           FontSize="72"
+                           LineHeight="86"
+                           FontWeight="Black"
+                           Foreground="White" />
+                <TextBlock Text="Start analyzing your data with Re:LPC"
+                           FontSize="36"
+                           Foreground="White" />
+            </StackPanel>
 
 
             <Border Name="LoginPanel" Grid.Column="1" Margin="60,80" Background="DarkGray" CornerRadius="16">
@@ -99,18 +97,29 @@
                                  Background="White"
                                  Foreground="#333333"
                                  CornerRadius="12"
-                                 PasswordChar="{Binding PasswordChar}"
+                                 PasswordChar="&#x25cf;"
                                  Text="{Binding Password}">
                             <TextBox.InnerRightContent>
                                 <ToggleButton
-                                    IsChecked="{Binding HidePassword}">
+                                    IsChecked="True"
+                                    Click="HidePassword_OnClick">
                                     <Image />
                                 </ToggleButton>
                             </TextBox.InnerRightContent>
                         </TextBox>
 
+                        <TextBlock
+                            Text="{Binding LoginStatus}"
+                            Foreground="White"
+                            FontSize="24"
+                            TextWrapping="Wrap"
+                            HorizontalAlignment="Center"
+                            Margin="0,14,0,0"
+                            MinHeight="20" />
+
                         <Button Content="LOGIN"
                                 Command="{Binding AttemptLoginCommand}"
+                                IsEnabled="{Binding !AttemptLoginCommand.IsRunning}"
                                 Width="250"
                                 Height="80"
                                 HorizontalAlignment="Center"

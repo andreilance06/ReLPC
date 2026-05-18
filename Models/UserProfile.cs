@@ -15,14 +15,5 @@ public class UserProfile
     // --- History Info (Bundled/Embedded) ---
     // Using a List here allows LiteDB to save all history 
     // inside the same JSON-like document as the user.
-    public List<CalculatorInput> History { get; set; } = [];
-}
-
-public class CalculatorInput
-{
-    public DateTime Timestamp { get; set; } = DateTime.Now;
-
-    // Store the raw inputs
-    public double[] XValues { get; set; }
-    public double[] YValues { get; set; }
+    public List<List<Point>> Datasets { get; set; } = [];
 }

@@ -2,8 +2,11 @@ using System;
 using System.Diagnostics;
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 
 namespace ReLPC.Views
 {
@@ -72,7 +75,7 @@ namespace ReLPC.Views
         {
             _timer = new DispatcherTimer
             {
-                Interval = TimeSpan.FromMilliseconds(1000.0/30.0)
+                Interval = TimeSpan.FromMilliseconds(1000.0 / 30.0)
             };
 
             _timer.Tick += OnRendering;
@@ -82,7 +85,7 @@ namespace ReLPC.Views
         private void OnRendering(object? sender, EventArgs e)
         {
             var t = _stopwatch.Elapsed.TotalSeconds;
-            
+
             var pageFlow = 0.5 * (1 + Math.Sin(t * 0.9 + Math.Sin(t * 0.2)));
             var panelFlow = 0.5 * (1 + Math.Sin(t * 1.15 + 1.2 + Math.Cos(t * 0.3)));
 
@@ -107,6 +110,22 @@ namespace ReLPC.Views
             _timer.Tick -= OnRendering;
 
             base.OnDetachedFromVisualTree(e);
+        }
+
+        private void HidePassword_OnClick(object? sender, RoutedEventArgs e)
+        {
+            if (sender is not ToggleButton toggleButton) return;
+
+            if (toggleButton.FindAncestorOfType<TextBox>() is not { } textBox) return;
+
+            if (toggleButton.IsChecked ?? false)
+            {
+                textBox.PasswordChar = '\u25cf';
+            }
+            else
+            {
+                textBox.PasswordChar = '\0';
+            }
         }
     }
 }

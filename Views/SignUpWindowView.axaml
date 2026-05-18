@@ -3,8 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:ReLPC.ViewModels"
-        mc:Ignorable="d"
-        d:DesignWidth="800" d:DesignHeight="600"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="600"
         Width="800" Height="600"
         MinWidth="800" MinHeight="600"
         x:Class="ReLPC.Views.SignUpWindowView"
@@ -29,8 +28,9 @@
         </Style>
     </Window.Styles>
 
-    <Grid Background="#FF5A47">
-        <Border Margin="28"
+    <Grid Name="PageRoot" Background="#FF5A47">
+        <Border Name="SignUpPanel"
+                Margin="28"
                 CornerRadius="24"
                 Background="#40FFFFFF"
                 BorderBrush="#80FFFFFF"
@@ -57,12 +57,12 @@
                                    FontWeight="SemiBold" />
                         <TextBox Height="48"
                                  FontSize="20"
+                                 Foreground="#333333"
                                  Background="White"
                                  BorderBrush="White"
                                  BorderThickness="1.2"
                                  CornerRadius="10"
                                  Padding="12"
-                                 Foreground="Red"
                                  Text="{Binding Username}" />
                     </StackPanel>
 
@@ -73,17 +73,18 @@
                                    FontWeight="SemiBold" />
                         <TextBox Height="48"
                                  FontSize="20"
+                                 Foreground="#333333"
                                  Background="White"
                                  BorderBrush="White"
                                  BorderThickness="1.2"
                                  CornerRadius="10"
                                  Padding="12"
-                                 Foreground="Red"
-                                 PasswordChar="{Binding PasswordChar1}"
+                                 PasswordChar="&#x25cf;"
                                  Text="{Binding Password}">
                             <TextBox.InnerRightContent>
                                 <ToggleButton
-                                    IsChecked="{Binding HidePassword1}">
+                                    Click="HidePassword_OnClick"
+                                    IsChecked="True">
                                     <Image />
                                 </ToggleButton>
                             </TextBox.InnerRightContent>
@@ -97,25 +98,35 @@
                                    FontWeight="SemiBold" />
                         <TextBox Height="48"
                                  FontSize="20"
+                                 Foreground="#333333"
                                  Background="White"
                                  BorderBrush="White"
                                  BorderThickness="1.2"
                                  CornerRadius="10"
                                  Padding="12"
-                                 Foreground="Red"
-                                 PasswordChar="{Binding PasswordChar2}"
+                                 PasswordChar="&#x25cf;"
                                  Text="{Binding PasswordConfirmation}">
                             <TextBox.InnerRightContent>
                                 <ToggleButton
-                                    IsChecked="{Binding HidePassword2}">
+                                    Click="HidePassword_OnClick"
+                                    IsChecked="True"
+                                    IsThreeState="False">
                                     <Image />
                                 </ToggleButton>
                             </TextBox.InnerRightContent>
                         </TextBox>
                     </StackPanel>
 
+                    <TextBlock Text="{Binding SignupStatus}"
+                               Foreground="White"
+                               FontWeight="Bold"
+                               FontSize="20"
+                               HorizontalAlignment="Center" />
+
                     <!-- BUTTON -->
                     <Button Content="SIGN UP"
+                            Command="{Binding AttemptSignupCommand}"
+                            IsEnabled="{Binding !AttemptSignupCommand.IsRunning}"
                             Width="200"
                             Height="48"
                             Background="White"
@@ -125,16 +136,9 @@
                             HorizontalContentAlignment="Center"
                             VerticalContentAlignment="Center"
                             FontSize="18"
-                            FontWeight="SemiBold"
-                            Margin="0,12,0,0"
-                            Command="{Binding AttemptSignupCommand}" />
+                            FontWeight="SemiBold" />
 
                 </StackPanel>
-                <TextBlock Text="{Binding SignupStatus}"
-                           Foreground="White"
-                           FontWeight="Bold"
-                           FontSize="24"
-                           HorizontalAlignment="Center" />
             </StackPanel>
         </Border>
     </Grid>

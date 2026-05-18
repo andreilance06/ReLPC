@@ -9,7 +9,14 @@
         Icon="/Assets/avalonia-logo.ico"
         Title="ReLPC"
         Background="#20100B">
-
+    <Window.Styles>
+        <Style Selector="StackPanel Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Height" Value="40" />
+        </Style>
+    </Window.Styles>
     <Grid>
         <Canvas Opacity="0.80">
             <Rectangle Width="2e6"
@@ -27,12 +34,37 @@
             </Canvas.Effect>
         </Canvas>
 
-        <Border Margin="8">
-            <Grid ColumnDefinitions="60, 160, 500, *"
+        <Grid RowDefinitions="Auto, *, Auto">
+            <StackPanel Grid.Row="0" Margin="8, 8, 8, 0" Orientation="Horizontal" VerticalAlignment="Center"
+                        Spacing="3">
+                <Image Source="/Assets/icons-logo/icon-logo.png" Width="40" Margin="10, 0"></Image>
+                <Button Width="36"
+                        Height="36"
+                        Padding="0"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        ToolTip.Tip="Undo (Ctrl+Z)">
+                    <Image Source="/Assets/elements/undo.png"
+                           Height="20" />
+                </Button>
+                <Button Width="36"
+                        Height="36"
+                        Padding="0"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        ToolTip.Tip="Redo (Ctrl+Y)">
+                    <Image Source="/Assets/elements/redo.png"
+                           Height="20" />
+                </Button>
+
+            </StackPanel>
+
+            <Grid Row="1" ColumnDefinitions="Auto, Auto, 500, *" Margin="8"
                   ColumnSpacing="3">
 
-                <!-- icon rail -->
-                <Border Grid.Column="0" CornerRadius="8">
+                <Border Name="MinDashboard" Grid.Column="0" Width="60" CornerRadius="8">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
                             <GradientStop Color="#CCFF4E3B" Offset="0" />
@@ -41,34 +73,26 @@
                         </LinearGradientBrush>
                     </Border.Background>
 
-                    <Grid RowDefinitions="Auto, *, Auto">
+                    <Grid RowDefinitions="Auto, *, Auto" HorizontalAlignment="Left">
                         <StackPanel Grid.Row="0"
                                     Margin="10"
                                     Spacing="16"
                                     HorizontalAlignment="Center">
                             <Button
-                                Padding="0"
-                                Background="Transparent">
+                                Click="ToggleDashboard">
                                 <Image Source="/Assets/elements/burger-menu.png" />
                             </Button>
                             <Button
-                                Padding="0"
-                                Background="Transparent">
+                                Click="ToggleDatasetPanel">
                                 <Image Source="/Assets/elements/file-explorer.png" />
                             </Button>
-                            <Button
-                                Padding="0"
-                                Background="Transparent">
+                            <Button>
                                 <Image Source="/Assets/elements/new-file.png" />
                             </Button>
-                            <Button
-                                Padding="0"
-                                Background="Transparent">
+                            <Button>
                                 <Image Source="/Assets/elements/open-file.png" />
                             </Button>
-                            <Button
-                                Padding="0"
-                                Background="Transparent">
+                            <Button>
                                 <Image Source="/Assets/elements/history.png" />
                             </Button>
                         </StackPanel>
@@ -77,9 +101,7 @@
                                     Margin="10"
                                     Spacing="16"
                                     HorizontalAlignment="Center">
-                            <Button
-                                Padding="0"
-                                Background="Transparent">
+                            <Button Command="{Binding LogoutCommand}">
                                 <Image Source="/Assets/elements/logout.png" />
                             </Button>
                         </StackPanel>
@@ -88,8 +110,94 @@
 
                 </Border>
 
-                <!-- data sets -->
-                <Border Grid.Column="1" CornerRadius="8" Background="White">
+                <Border Name="MaxDashboard" Grid.Column="0" Width="200" CornerRadius="8" IsVisible="False">
+                    <Border.Background>
+                        <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                            <GradientStop Color="#CCFF4E3B" Offset="0" />
+                            <GradientStop Color="#ff3131" Offset=".5" />
+                            <GradientStop Color="#CFFF6A1E" Offset="1" />
+                        </LinearGradientBrush>
+                    </Border.Background>
+
+                    <Grid RowDefinitions="Auto, *, Auto" HorizontalAlignment="Left">
+                        <StackPanel Grid.Row="0"
+                                    Margin="10"
+                                    Spacing="16"
+                                    HorizontalAlignment="Center">
+                            <Button
+                                Click="ToggleDashboard">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Image Source="/Assets/elements/burger-menu.png" />
+                                    <TextBlock Text="DASHBOARD"
+                                               VerticalAlignment="Center"
+                                               Foreground="White"
+                                               FontSize="12"
+                                               FontWeight="Bold" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button
+                                Click="ToggleDatasetPanel">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Image Source="/Assets/elements/file-explorer.png" />
+                                    <TextBlock Text="DATASETS"
+                                               VerticalAlignment="Center"
+                                               Foreground="White"
+                                               FontSize="12"
+                                               FontWeight="Bold" />
+                                </StackPanel>
+                            </Button>
+                            <Button>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Image Source="/Assets/elements/new-file.png" />
+                                    <TextBlock Text="NEW DATASET"
+                                               VerticalAlignment="Center"
+                                               Foreground="White"
+                                               FontSize="12"
+                                               FontWeight="Bold" />
+                                </StackPanel>
+                            </Button>
+                            <Button>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Image Source="/Assets/elements/open-file.png" />
+                                    <TextBlock Text="LOAD DATASET"
+                                               VerticalAlignment="Center"
+                                               Foreground="White"
+                                               FontSize="12"
+                                               FontWeight="Bold" />
+                                </StackPanel>
+                            </Button>
+                            <Button>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Image Source="/Assets/elements/history.png" />
+                                    <TextBlock Text="HISTORY"
+                                               VerticalAlignment="Center"
+                                               Foreground="White"
+                                               FontSize="12"
+                                               FontWeight="Bold" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2"
+                                    Margin="10"
+                                    Spacing="16"
+                                    HorizontalAlignment="Left">
+                            <Button Command="{Binding LogoutCommand}">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Image Source="/Assets/elements/logout.png" />
+                                    <TextBlock Text="LOG OUT"
+                                               VerticalAlignment="Center"
+                                               Foreground="White"
+                                               FontSize="12"
+                                               FontWeight="Bold" />
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Name="DatasetPanel" Grid.Column="1" Width="160" CornerRadius="8" Background="White">
                     <StackPanel Spacing="10"
                                 Margin="16, 24">
                         <TextBlock Text="DATA SETS"
@@ -110,10 +218,9 @@
                     </StackPanel>
                 </Border>
 
-                <!-- data entry -->
                 <Border Grid.Column="2" CornerRadius="8" Background="White">
                     <Grid RowDefinitions="Auto, *, Auto"
-                          Margin="20, 10">
+                          Margin="40, 20">
                         <StackPanel Grid.Row="0">
                             <TextBlock Text="DATA ENTRY"
                                        FontFamily="Arial Black"
@@ -128,11 +235,35 @@
                         </StackPanel>
 
                         <!-- table of values -->
-                        <Grid Row="1"></Grid>
+                        <DataGrid Grid.Row="1"
+                                  ItemsSource="{Binding Inputs}"
+                                  AutoGenerateColumns="True"
+                                  CellEditEnding="DataGrid_OnCellEditEnding"
+                                  CurrentCellChanged="DataGrid_OnCurrentCellChanged"
+                                  CanUserReorderColumns="False"
+                                  CanUserResizeColumns="True"
+                                  CanUserSortColumns="False"
+                                  Foreground="#ff3131"
+                                  Background="White"
+                                  GridLinesVisibility="All"
+                                  HorizontalGridLinesBrush="#ff3131"
+                                  VerticalGridLinesBrush="#ff3131"
+                                  KeyDown="InputElement_OnKeyDown"
+                                  BorderThickness="2"
+                                  BorderBrush="#ff3131"
+                                  Margin="0, 10">
+                            <DataGrid.Styles>
+                                <Style Selector="DataGridColumnHeader">
+                                    <Setter Property="Background" Value="#ff3131" />
+                                    <Setter Property="Foreground" Value="White" />
+                                </Style>
+                            </DataGrid.Styles>
+                        </DataGrid>
 
                         <!-- calculation settings -->
                         <Grid Row="2" ColumnDefinitions="*, Auto, Auto" ColumnSpacing="4">
                             <TextBox Grid.Column="1"
+                                     Width="110"
                                      Height="46"
                                      FontSize="14"
                                      Background="White"
@@ -141,10 +272,10 @@
                                      BorderThickness="1"
                                      CornerRadius="8"
                                      Padding="14, 7"
-                                     VerticalContentAlignment="Center">
-                            </TextBox>
+                                     VerticalContentAlignment="Center"
+                                     PlaceholderText="Degree"
+                                     Text="{Binding DegreeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <ComboBox Grid.Column="2"
-                                      SelectedIndex="0"
                                       Height="46"
                                       FontSize="14"
                                       Background="White"
@@ -153,7 +284,8 @@
                                       BorderThickness="1"
                                       CornerRadius="8"
                                       Padding="14, 7"
-                                      VerticalContentAlignment="Center">
+                                      VerticalContentAlignment="Center"
+                                      SelectedIndex="{Binding SelectedRegressionIndex, Mode=TwoWay}">
                                 <ComboBoxItem Content="Linear Regression" />
                                 <ComboBoxItem Content="Polynomial Regression" />
                                 <ComboBoxItem Content="Both" />
@@ -165,11 +297,106 @@
 
                 <!-- calculation results -->
                 <Border Grid.Column="3" CornerRadius="8" Background="White">
+                    <Grid RowDefinitions="Auto, *, Auto"
+                          Margin="40, 20">
+                        <TextBlock Grid.Row="0" Text="RESULT"
+                                   FontFamily="Arial Black"
+                                   FontSize="40"
+                                   FontWeight="Black"
+                                   Foreground="#ff3131"
+                                   LetterSpacing="0" />
 
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                                      Margin="0, 24">
+                            <StackPanel Spacing="8">
+
+                                <TextBlock Text="EQUATION"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           Foreground="#ff3131" />
+                                <Border MinHeight="64"
+                                        BorderBrush="#40FF4E3B"
+                                        BorderThickness="0,0,0,1"
+                                        Padding="0,0,0,12">
+                                    <TextBlock Text="{Binding Equation}"
+                                               TextWrapping="Wrap"
+                                               FontFamily="Cascadia Code,Consolas,Menlo,monospace"
+                                               FontSize="18"
+                                               Foreground="#171717" />
+                                </Border>
+
+                                <TextBlock Text="COEFFICIENT"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           Foreground="#ff3131" />
+                                <Border MinHeight="64"
+                                        BorderBrush="#40FF4E3B"
+                                        BorderThickness="0,0,0,1"
+                                        Padding="0,0,0,12">
+                                    <TextBlock Text="{Binding Coefficient}"
+                                               TextWrapping="Wrap"
+                                               FontFamily="Cascadia Code,Consolas,Menlo,monospace"
+                                               FontSize="16"
+                                               Foreground="#171717" />
+                                </Border>
+
+                                <TextBlock Text="INTERMEDIATE COMPUTATIONS"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           Foreground="#ff3131" />
+                                <Border MinHeight="64"
+                                        BorderBrush="#40FF4E3B"
+                                        BorderThickness="0,0,0,1"
+                                        Padding="0,0,0,12">
+                                    <TextBlock Text="{Binding Intermediates}"
+                                               TextWrapping="Wrap"
+                                               FontFamily="Cascadia Code,Consolas,Menlo,monospace"
+                                               FontSize="14"
+                                               Foreground="#171717" />
+                                </Border>
+
+
+                                <TextBlock Text="PREDICTION"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           Foreground="#ff3131" />
+                                <Border MinHeight="64"
+                                        BorderBrush="#40FF4E3B"
+                                        BorderThickness="0,0,0,1"
+                                        Padding="0,0,0,12">
+                                    <StackPanel Spacing="8">
+                                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                            <TextBlock Text="x ="
+                                                       VerticalAlignment="Center"
+                                                       FontSize="16"
+                                                       Foreground="#171717" />
+                                            <TextBox Width="160"
+                                                     FontSize="14"
+                                                     Background="White"
+                                                     Foreground="#ff3131"
+                                                     BorderBrush="#ff3131"
+                                                     BorderThickness="1"
+                                                     CornerRadius="8"
+                                                     Padding="10, 5"
+                                                     PlaceholderText="enter X"
+                                                     Text="{Binding PredictionXText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                        <TextBlock Text="{Binding Prediction}"
+                                                   TextWrapping="Wrap"
+                                                   FontFamily="Cascadia Code,Consolas,Menlo,monospace"
+                                                   FontSize="16"
+                                                   Foreground="#171717" />
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+
+                        </ScrollViewer>
+                    </Grid>
                 </Border>
             </Grid>
-        </Border>
 
 
+        </Grid>
     </Grid>
+
 </Window>
