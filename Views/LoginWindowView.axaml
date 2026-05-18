@@ -9,7 +9,9 @@
         d:DesignWidth="1920" d:DesignHeight="1080"
         Width="1920" Height="1080"
         MinWidth="1280" MinHeight="720"
-        Title="ReLPC - Login">
+        Title="ReLPC - Login"
+        WindowStartupLocation="CenterScreen">
+        
 
     <Window.Styles>
         <Style Selector="ToggleButton">

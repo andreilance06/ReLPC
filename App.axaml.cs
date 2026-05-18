@@ -25,9 +25,16 @@ public partial class App : Application
             desktop.ShutdownMode = ShutdownMode.OnLastWindowClose;
             var sessionService = new SessionService();
             var databaseService = new LiteDBService();
+            var recentDatasetsService = new RecentDatasetsService(databaseService);
             var windowService = new WindowService();
-            desktop.MainWindow = new LoginWindowView()
-                { DataContext = new LoginWindowViewModel(sessionService, databaseService, windowService) };
+            desktop.MainWindow = new LoginWindowView
+            {
+                DataContext = new LoginWindowViewModel(
+                    sessionService,
+                    databaseService,
+                    windowService,
+                    recentDatasetsService)
+            };
         }
 
         base.OnFrameworkInitializationCompleted();

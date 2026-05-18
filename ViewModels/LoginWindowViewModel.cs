@@ -8,7 +8,8 @@ namespace ReLPC.ViewModels;
 public partial class LoginWindowViewModel(
     ISessionService sessionService,
     IDatabaseService databaseService,
-    IWindowService windowService) : ViewModelBase
+    IWindowService windowService,
+    IRecentDatasetsService recentDatasetsService) : ViewModelBase
 {
     [ObservableProperty] public partial string Username { get; set; } = "";
 
@@ -55,7 +56,11 @@ public partial class LoginWindowViewModel(
             }
 
             sessionService.CurrentUser = profile;
-            windowService.CreateAndShowWindow(new MainWindowViewModel(sessionService, databaseService, windowService));
+            windowService.CreateAndShowWindow(new DashboardWindowViewModel(
+                recentDatasetsService,
+                databaseService,
+                sessionService,
+                windowService));
 
             windowService.FindWindowFromDataModel(this)?.Close();
         }

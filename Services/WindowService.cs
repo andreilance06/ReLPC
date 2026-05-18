@@ -8,9 +8,10 @@ namespace ReLPC.Services;
 
 public interface IWindowService
 {
-    public void CreateAndShowWindow(object viewModel);
-    public Window? FindWindowFromDataModel(object viewModel);
-    public Window? FindWindowFromDataModel(Type t);
+    void CreateAndShowWindow(object viewModel);
+    void ShowAsMainWindow(Window window);
+    Window? FindWindowFromDataModel(object viewModel);
+    Window? FindWindowFromDataModel(Type t);
 }
 
 public class WindowService : IWindowService
@@ -25,7 +26,12 @@ public class WindowService : IWindowService
             throw new Exception();
 
         window.DataContext = viewModel;
-        window.Show();
+        ShowAsMainWindow(window);
+    }
+
+    public void ShowAsMainWindow(Window window)
+    {
+        DesktopSession.ShowAsMainWindow(window);
     }
 
     public Window? FindWindowFromDataModel(object viewModel)

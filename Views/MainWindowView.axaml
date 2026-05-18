@@ -64,7 +64,8 @@
             <Grid Row="1" ColumnDefinitions="Auto, Auto, 500, *" Margin="8"
                   ColumnSpacing="3">
 
-                <Border Name="MinDashboard" Grid.Column="0" Width="60" CornerRadius="8">
+                <Border Name="MinDashboard" Grid.Column="0" Width="60" CornerRadius="8"
+                        IsVisible="{Binding !IsMenuExpanded}">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
                             <GradientStop Color="#CCFF4E3B" Offset="0" />
@@ -78,22 +79,20 @@
                                     Margin="10"
                                     Spacing="16"
                                     HorizontalAlignment="Center">
-                            <Button
-                                Click="ToggleDashboard">
+                            <Button Command="{Binding ToggleMenuCommand}">
                                 <Image Source="/Assets/elements/burger-menu.png" />
                             </Button>
-                            <Button
-                                Click="ToggleDatasetPanel">
+                            <Button Command="{Binding ToggleDatasetPanelCommand}">
                                 <Image Source="/Assets/elements/file-explorer.png" />
                             </Button>
-                            <Button>
+                            <Button Command="{Binding CreateNewDatasetCommand}">
                                 <Image Source="/Assets/elements/new-file.png" />
                             </Button>
-                            <Button>
+                            <Button Command="{Binding PickAndLoadDatasetCommand}">
                                 <Image Source="/Assets/elements/open-file.png" />
                             </Button>
-                            <Button>
-                                <Image Source="/Assets/elements/history.png" />
+                            <Button Command="{Binding ExportPdfCommand}">
+                                <Image Source="/Assets/elements/export.png" />
                             </Button>
                         </StackPanel>
 
@@ -110,7 +109,8 @@
 
                 </Border>
 
-                <Border Name="MaxDashboard" Grid.Column="0" Width="200" CornerRadius="8" IsVisible="False">
+                <Border Name="MaxDashboard" Grid.Column="0" Width="200" CornerRadius="8"
+                        IsVisible="{Binding IsMenuExpanded}">
                     <Border.Background>
                         <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
                             <GradientStop Color="#CCFF4E3B" Offset="0" />
@@ -124,10 +124,20 @@
                                     Margin="10"
                                     Spacing="16"
                                     HorizontalAlignment="Center">
-                            <Button
-                                Click="ToggleDashboard">
+                            <Button Command="{Binding ToggleMenuCommand}">
                                 <StackPanel Orientation="Horizontal" Spacing="12">
                                     <Image Source="/Assets/elements/burger-menu.png" />
+                                    <TextBlock Text="MENU"
+                                               VerticalAlignment="Center"
+                                               Foreground="White"
+                                               FontSize="12"
+                                               FontWeight="Bold" />
+                                </StackPanel>
+                            </Button>
+
+                            <Button Command="{Binding GoToDashboardCommand}">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Image Source="/Assets/elements/dashboard.png" />
                                     <TextBlock Text="DASHBOARD"
                                                VerticalAlignment="Center"
                                                Foreground="White"
@@ -136,8 +146,7 @@
                                 </StackPanel>
                             </Button>
 
-                            <Button
-                                Click="ToggleDatasetPanel">
+                            <Button Command="{Binding ToggleDatasetPanelCommand}">
                                 <StackPanel Orientation="Horizontal" Spacing="12">
                                     <Image Source="/Assets/elements/file-explorer.png" />
                                     <TextBlock Text="DATASETS"
@@ -147,7 +156,7 @@
                                                FontWeight="Bold" />
                                 </StackPanel>
                             </Button>
-                            <Button>
+                            <Button Command="{Binding CreateNewDatasetCommand}">
                                 <StackPanel Orientation="Horizontal" Spacing="12">
                                     <Image Source="/Assets/elements/new-file.png" />
                                     <TextBlock Text="NEW DATASET"
@@ -157,7 +166,7 @@
                                                FontWeight="Bold" />
                                 </StackPanel>
                             </Button>
-                            <Button>
+                            <Button Command="{Binding PickAndLoadDatasetCommand}">
                                 <StackPanel Orientation="Horizontal" Spacing="12">
                                     <Image Source="/Assets/elements/open-file.png" />
                                     <TextBlock Text="LOAD DATASET"
@@ -167,10 +176,10 @@
                                                FontWeight="Bold" />
                                 </StackPanel>
                             </Button>
-                            <Button>
+                            <Button Command="{Binding ExportPdfCommand}">
                                 <StackPanel Orientation="Horizontal" Spacing="12">
-                                    <Image Source="/Assets/elements/history.png" />
-                                    <TextBlock Text="HISTORY"
+                                    <Image Source="/Assets/elements/export.png" />
+                                    <TextBlock Text="EXPORT PDF"
                                                VerticalAlignment="Center"
                                                Foreground="White"
                                                FontSize="12"
@@ -197,31 +206,40 @@
                     </Grid>
                 </Border>
 
-                <Border Name="DatasetPanel" Grid.Column="1" Width="160" CornerRadius="8" Background="White">
-                    <StackPanel Spacing="10"
-                                Margin="16, 24">
+                <Border Name="DatasetPanel" Grid.Column="1" Width="160" CornerRadius="8" Background="White"
+                        IsVisible="{Binding IsDatasetPanelVisible}">
+                    <StackPanel Spacing="10" Margin="16,24">
                         <TextBlock Text="DATA SETS"
                                    FontSize="14"
                                    FontWeight="Black"
                                    Foreground="#ff3131" />
-                        <StackPanel Spacing="4">
-                            <TextBlock Text="SAMPLE SET 1"
-                                       FontSize="13"
-                                       Foreground="#ff3131" />
-                            <TextBlock Text="SAMPLE SET 2"
-                                       FontSize="13"
-                                       Foreground="#ff3131" />
-                            <TextBlock Text="SAMPLE SET 3"
-                                       FontSize="13"
-                                       Foreground="#ff3131" />
-                        </StackPanel>
+                        <ListBox ItemsSource="{Binding UserDatasets}"
+                                 SelectedItem="{Binding SelectedDataset, Mode=TwoWay}"
+                                 Background="Transparent"
+                                 BorderThickness="0">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding DashboardTitle}"
+                                               FontSize="13"
+                                               Foreground="#ff3131"
+                                               TextWrapping="Wrap"/>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
                     </StackPanel>
                 </Border>
 
                 <Border Grid.Column="2" CornerRadius="8" Background="White">
                     <Grid RowDefinitions="Auto, *, Auto"
                           Margin="40, 20">
-                        <StackPanel Grid.Row="0">
+                        <StackPanel Grid.Row="0" Spacing="4">
+                            <TextBox Text="{Binding DatasetName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     Watermark="Dataset name"
+                                     FontSize="14"
+                                     Foreground="#885038"
+                                     Background="Transparent"
+                                     BorderThickness="0"
+                                     Padding="0"/>
                             <TextBlock Text="DATA ENTRY"
                                        FontFamily="Arial Black"
                                        FontSize="40"

@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MathNet.Numerics;
@@ -23,9 +24,9 @@ public partial class MainWindowViewModel : ViewModelBase
     public ObservableCollection<Point> Inputs { get; } = [];
     public ObservableCollection<Point> Outputs { get; } = [];
 
-    private ISessionService _sessionService;
-    private IDatabaseService _databaseService;
-    private IWindowService _windowService;
+    private readonly ISessionService _sessionService;
+    private readonly IDatabaseService _databaseService;
+    private readonly IWindowService _windowService;
 
     [ObservableProperty] public partial string Equation { get; set; }
     [ObservableProperty] public partial string Coefficient { get; set; }
@@ -43,11 +44,16 @@ public partial class MainWindowViewModel : ViewModelBase
     public MainWindowViewModel(
         ISessionService sessionService,
         IDatabaseService databaseService,
-        IWindowService windowService)
+        IWindowService windowService,
+        IRecentDatasetsService recentDatasets,
+        IExportService exportService,
+        DatasetRecord? initialDataset = null)
     {
         _sessionService = sessionService;
         _databaseService = databaseService;
         _windowService = windowService;
+        _recentDatasets = recentDatasets;
+        _exportService = exportService;
 
         DegreeText = "2";
         PredictionXText = "";
@@ -55,7 +61,13 @@ public partial class MainWindowViewModel : ViewModelBase
         Coefficient = "No Calculation Yet";
         Intermediates = "No Calculation Yet";
         Prediction = "No Calculation Yet";
-        TidyRows();
+
+        if (initialDataset is not null)
+            LoadDataset(initialDataset);
+        else
+            TidyRows();
+
+        RefreshUserDatasetsList();
     }
 
     public void TidyRows()
@@ -125,6 +137,18 @@ public partial class MainWindowViewModel : ViewModelBase
         Intermediates = intSb.Length > 0 ? intSb.ToString().TrimEnd() : "-";
 
         UpdatePrediction();
+
+        if (_currentDatasetId > 0 && !_loadingDataset)
+        {
+            var userId = _sessionService.CurrentUser?.Id ?? 0;
+            var dataset = _databaseService.GetDataset(_currentDatasetId);
+            if (dataset is not null && dataset.UserId == userId)
+            {
+                dataset.Equation = Equation;
+                dataset.Coefficient = Coefficient;
+                dataset.IntermediateComputations = Intermediates;
+            }
+        }
     }
 
     private void BuildLinear(double[] xs, double[] ys, StringBuilder eq, StringBuilder co, StringBuilder it)
@@ -304,11 +328,4 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private static string Fmt(double v) => v.ToString("0.######", CultureInfo.InvariantCulture);
 
-    [RelayCommand]
-    public void Logout()
-    {
-        _sessionService.CurrentUser = null;
-        _windowService.CreateAndShowWindow(new LoginWindowViewModel(_sessionService, _databaseService, _windowService));
-        _windowService.FindWindowFromDataModel(this)?.Close();
-    }
 }

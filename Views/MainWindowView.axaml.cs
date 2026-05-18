@@ -11,25 +11,13 @@ public partial class MainWindowView : Window
     public MainWindowView()
     {
         InitializeComponent();
+        Opened += OnOpened;
     }
 
-    public void ToggleDashboard(object? sender, RoutedEventArgs? e)
+    private void OnOpened(object? sender, EventArgs e)
     {
-        if (MinDashboard.IsVisible)
-        {
-            MinDashboard.IsVisible = false;
-            MaxDashboard.IsVisible = true;
-        }
-        else
-        {
-            MinDashboard.IsVisible = true;
-            MaxDashboard.IsVisible = false;
-        }
-    }
-
-    public void ToggleDatasetPanel(object? sender, RoutedEventArgs? e)
-    {
-        DatasetPanel.IsVisible = !DatasetPanel.IsVisible;
+        if (DataContext is MainWindowViewModel vm)
+            vm.HostWindow = this;
     }
 
     private void DataGrid_OnCellEditEnding(object? sender, DataGridCellEditEndingEventArgs e)
