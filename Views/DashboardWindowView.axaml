@@ -1,0 +1,184 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:ReLPC.ViewModels"
+        x:Class="ReLPC.Views.DashboardWindowView"
+        x:Name="DashboardRoot"
+        x:DataType="vm:DashboardWindowViewModel"
+        mc:Ignorable="d"
+        Title="ReLPC - Dashboard"
+        Width="1280"
+        Height="760"
+        MinWidth="1024"
+        MinHeight="640"
+        WindowStartupLocation="CenterScreen"
+        Background="#FFF8F3">
+
+  <Grid ColumnDefinitions="320,*"
+        RowDefinitions="*">
+
+    <Border x:Name="SidebarPanel"
+            Grid.Column="0"
+            CornerRadius="0,10,10,0"
+            Padding="40,60,30,40">
+      <Border.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+          <GradientStop Color="#FF2D32" Offset="0"/>
+          <GradientStop Color="#FF3A34" Offset="0.32"/>
+          <GradientStop Color="#FF7550" Offset="0.5"/>
+          <GradientStop Color="#FF553C" Offset="0.68"/>
+          <GradientStop Color="#FF7442" Offset="1"/>
+        </LinearGradientBrush>
+      </Border.Background>
+
+      <Grid RowDefinitions="Auto,Auto,*,Auto">
+        <StackPanel Spacing="30">
+          <TextBlock Text="DASHBOARD"
+                     FontSize="36"
+                     FontWeight="Black"
+                     Foreground="White"
+                     TextWrapping="Wrap"/>
+          <TextBlock Text="{Binding WelcomeName, StringFormat='WELCOME, {0}'}"
+                     FontSize="18"
+                     FontWeight="SemiBold"
+                     Foreground="#FFF1E8"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1"
+                    Margin="0,60,0,0"
+                    Spacing="20">
+          <Button Background="Transparent"
+                  BorderThickness="0"
+                  Padding="0"
+                  Cursor="Hand"
+                  HorizontalAlignment="Left"
+                  Command="{Binding CreateNewDatasetCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <Image Source="/Assets/elements/new-file.png" Width="24" Height="24"/>
+              <TextBlock Text="NEW DATASET"
+                         VerticalAlignment="Center"
+                         Foreground="White"
+                         FontSize="16"
+                         FontWeight="Bold"/>
+            </StackPanel>
+          </Button>
+
+          <Button Background="Transparent"
+                  BorderThickness="0"
+                  Padding="0"
+                  Cursor="Hand"
+                  HorizontalAlignment="Left"
+                  Command="{Binding LoadDatasetCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <Image Source="/Assets/elements/open-file.png" Width="24" Height="24"/>
+              <TextBlock Text="LOAD DATASET"
+                         VerticalAlignment="Center"
+                         Foreground="White"
+                         FontSize="16"
+                         FontWeight="Bold"/>
+            </StackPanel>
+          </Button>
+
+          <Button Background="Transparent"
+                  BorderThickness="0"
+                  Padding="0"
+                  Cursor="Hand"
+                  HorizontalAlignment="Left"
+                  Command="{Binding LogoutCommand}">
+            <StackPanel Orientation="Horizontal" Spacing="12">
+              <Image Source="/Assets/elements/logout.png" Width="24" Height="24"/>
+              <TextBlock Text="LOGOUT"
+                         VerticalAlignment="Center"
+                         Foreground="White"
+                         FontSize="16"
+                         FontWeight="Bold"/>
+            </StackPanel>
+          </Button>
+        </StackPanel>
+      </Grid>
+    </Border>
+
+    <ScrollViewer Grid.Column="1"
+                  Margin="40,60,40,40"
+                  VerticalScrollBarVisibility="Auto">
+      <StackPanel Spacing="40">
+        <TextBlock Text="RECENT DATA SETS"
+                   FontSize="32"
+                   FontWeight="Black"
+                   Foreground="#FF4B34"/>
+
+        <ItemsControl ItemsSource="{Binding FeaturedDatasets}">
+          <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+              <UniformGrid Columns="3" HorizontalAlignment="Stretch"/>
+            </ItemsPanelTemplate>
+          </ItemsControl.ItemsPanel>
+          <ItemsControl.ItemTemplate>
+            <DataTemplate x:DataType="vm:DashboardDatasetItem">
+              <Button Background="Transparent"
+                      BorderThickness="0"
+                      Padding="0"
+                      Margin="12,0"
+                      Cursor="Hand"
+                      MaxWidth="260"
+                      HorizontalAlignment="Center"
+                      Click="OnRecentDatasetClick">
+                <StackPanel Spacing="10">
+                  <Border Height="140" CornerRadius="10" ClipToBounds="True">
+                    <Image Source="/Assets/elements/dataset-preview.png" Stretch="UniformToFill"/>
+                  </Border>
+                  <TextBlock Text="{Binding Title}"
+                             HorizontalAlignment="Center"
+                             FontSize="12"
+                             TextWrapping="Wrap"
+                             TextAlignment="Center"
+                             Foreground="#FF4B34"/>
+                </StackPanel>
+              </Button>
+            </DataTemplate>
+          </ItemsControl.ItemTemplate>
+        </ItemsControl>
+
+        <StackPanel Spacing="0" IsVisible="{Binding HasMoreDatasets}">
+          <Border BorderBrush="#FF4B34" BorderThickness="0,0,0,1" Margin="0,0,0,10"/>
+
+          <ItemsControl ItemsSource="{Binding MoreDatasets}">
+            <ItemsControl.ItemTemplate>
+              <DataTemplate x:DataType="vm:DashboardDatasetItem">
+                <StackPanel Spacing="0">
+                  <Button Background="Transparent"
+                          BorderThickness="0"
+                          Padding="0"
+                          Margin="0,12"
+                          Cursor="Hand"
+                          HorizontalAlignment="Stretch"
+                          Click="OnRecentDatasetClick">
+                    <Grid ColumnDefinitions="*,Auto">
+                      <StackPanel>
+                        <TextBlock Text="{Binding Title}" FontSize="16" Foreground="#FF4B34"/>
+                        <TextBlock Text="{Binding OwnerCaption}" FontSize="12" Foreground="#FF4B34" Opacity="0.6"/>
+                      </StackPanel>
+                      <TextBlock Grid.Column="1"
+                                 Text="{Binding ModifiedDateDisplay}"
+                                 FontSize="12"
+                                 Foreground="#FF4B34"
+                                 VerticalAlignment="Center"/>
+                    </Grid>
+                  </Button>
+                  <Border BorderBrush="#FF4B34" BorderThickness="0,0,0,1" Opacity="0.3"/>
+                </StackPanel>
+              </DataTemplate>
+            </ItemsControl.ItemTemplate>
+          </ItemsControl>
+        </StackPanel>
+
+        <TextBlock Text="Open or create a dataset to see it here."
+                   FontSize="14"
+                   Foreground="#FF4B34"
+                   Opacity="0.7"
+                   IsVisible="{Binding !HasRecentDatasets}"/>
+      </StackPanel>
+    </ScrollViewer>
+  </Grid>
+</Window>

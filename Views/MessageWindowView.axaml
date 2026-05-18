@@ -1,0 +1,48 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        x:Class="ReLPC.Views.MessageWindowView"
+        mc:Ignorable="d"
+        Width="420"
+        Height="200"
+        MinWidth="360"
+        MinHeight="170"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        WindowDecorations="None"
+        TransparencyLevelHint="Transparent"
+        Background="Transparent">
+
+  <Border Margin="8"
+          Padding="26"
+          Background="#FFF8F3"
+          CornerRadius="14">
+    <Grid RowDefinitions="*,Auto">
+      <StackPanel Spacing="8">
+        <TextBlock x:Name="TitleText"
+                   FontSize="20"
+                   FontWeight="Bold"
+                   Foreground="#171717"/>
+        <TextBlock x:Name="MessageText"
+                   FontSize="14"
+                   TextWrapping="Wrap"
+                   Foreground="#4A4A4A"/>
+      </StackPanel>
+
+      <Button Grid.Row="1"
+              Content="OK"
+              Width="88"
+              Height="34"
+              HorizontalAlignment="Right"
+              HorizontalContentAlignment="Center"
+              VerticalContentAlignment="Center"
+              Background="#FFFF4E3B"
+              Foreground="White"
+              BorderBrush="#FFFF4E3B"
+              BorderThickness="1"
+              CornerRadius="6"
+              Click="OnOkClick"/>
+    </Grid>
+  </Border>
+</Window>

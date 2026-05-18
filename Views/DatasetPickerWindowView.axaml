@@ -1,0 +1,81 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        x:Class="ReLPC.Views.DatasetPickerWindowView"
+        mc:Ignorable="d"
+        Title="Load Dataset"
+        Width="430"
+        Height="360"
+        MinWidth="380"
+        MinHeight="300"
+        WindowStartupLocation="CenterOwner"
+        CanResize="True"
+        WindowDecorations="None"
+        TransparencyLevelHint="Transparent"
+        Background="Transparent">
+
+  <Grid>
+    <Border Margin="8"
+            Padding="24"
+            Background="#FFF8F3"
+            CornerRadius="14">
+      <Grid RowDefinitions="Auto,*,Auto">
+        <Grid ColumnDefinitions="*,Auto"
+              PointerPressed="OnTitleBarPointerPressed">
+          <TextBlock Text="Load Dataset"
+                     VerticalAlignment="Center"
+                     FontSize="22"
+                     FontWeight="Bold"
+                     Foreground="#171717"/>
+          <Button Grid.Column="1"
+                  Width="30"
+                  Height="30"
+                  Padding="0"
+                  Background="Transparent"
+                  BorderThickness="0"
+                  Cursor="Hand"
+                  Click="OnCancelClick">
+            <Image Source="/Assets/elements/close.png"
+                   Width="16"
+                   Height="16"/>
+          </Button>
+        </Grid>
+
+        <ListBox x:Name="DatasetsListBox"
+                 Grid.Row="1"
+                 Margin="0,18,0,18"
+                 Background="White"
+                 Foreground="#171717"/>
+
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Spacing="10">
+          <Button Content="Cancel"
+                  Width="88"
+                  Height="34"
+                  HorizontalContentAlignment="Center"
+                  VerticalContentAlignment="Center"
+                  Background="White"
+                  Foreground="#171717"
+                  BorderBrush="#CCFF4E3B"
+                  BorderThickness="1"
+                  CornerRadius="6"
+                  Click="OnCancelClick"/>
+          <Button Content="Load"
+                  Width="88"
+                  Height="34"
+                  HorizontalContentAlignment="Center"
+                  VerticalContentAlignment="Center"
+                  Background="#FFFF4E3B"
+                  Foreground="White"
+                  BorderBrush="#FFFF4E3B"
+                  BorderThickness="1"
+                  CornerRadius="6"
+                  Click="OnLoadClick"/>
+        </StackPanel>
+      </Grid>
+    </Border>
+  </Grid>
+</Window>

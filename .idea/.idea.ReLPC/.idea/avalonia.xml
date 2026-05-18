@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="Views/DashboardWindowView.axaml" value="ReLPC.csproj" />
+        <entry key="Views/DatasetPickerWindowView.axaml" value="ReLPC.csproj" />
+        <entry key="Views/LoginWindowView.axaml" value="ReLPC.csproj" />
+        <entry key="Views/MessageWindowView.axaml" value="ReLPC.csproj" />
+      </map>
+    </option>
+  </component>
+</project>
