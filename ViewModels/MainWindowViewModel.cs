@@ -76,11 +76,21 @@ public partial class MainWindowViewModel : ViewModelBase
         Intermediates = "No Calculation Yet";
         Prediction = "No Calculation Yet";
 
-        if (initialDataset is not null)
-            LoadDataset(initialDataset);
-        else
-            TidyRows();
+        _suppressHistory = true;
+        try
+        {
+            if (initialDataset is not null)
+                LoadDataset(initialDataset);
+            else
+                TidyRows();
+        }
+        finally
+        {
+            _suppressHistory = false;
+        }
 
+        RebuildLastValues();
+        ResetHistory();
         RefreshUserDatasetsList();
     }
 
@@ -105,6 +115,7 @@ public partial class MainWindowViewModel : ViewModelBase
         TidyRows();
         Calculate();
         AutoSaveCurrentDataset();
+        FlushPendingChanges();
     }
 
     partial void OnSelectedRegressionIndexChanged(int value) => RecalculateAndSave();
@@ -121,21 +132,44 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (e.OldItems is not null)
         {
+            int idx = e.OldStartingIndex;
             foreach (Point point in e.OldItems)
+            {
                 point.PropertyChanged -= OnInputPointPropertyChanged;
+                if (!_suppressHistory)
+                {
+                    RecordRowRemove(idx, point);
+                    _lastValues.Remove(point);
+                }
+                idx++;
+            }
         }
 
         if (e.NewItems is not null)
         {
+            int idx = e.NewStartingIndex;
             foreach (Point point in e.NewItems)
+            {
                 point.PropertyChanged += OnInputPointPropertyChanged;
+                if (!_suppressHistory)
+                {
+                    RecordRowInsert(idx, point);
+                    _lastValues[point] = (point.X, point.Y);
+                }
+                idx++;
+            }
         }
     }
 
     private void OnInputPointPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName is nameof(Point.X) or nameof(Point.Y))
-            DatasetChanged();
+        if (_suppressHistory) return;
+        if (e.PropertyName is not (nameof(Point.X) or nameof(Point.Y))) return;
+
+        var point = (Point)sender!;
+        RecordCellChange(point, e.PropertyName);
+        _lastValues[point] = (point.X, point.Y);
+        DatasetChanged();
     }
 
     private void Calculate()

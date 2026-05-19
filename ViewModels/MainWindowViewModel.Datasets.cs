@@ -196,6 +196,7 @@ public partial class MainWindowViewModel
     {
         // Feature: load dataset metadata, points, saved calculations, and recent history.
         _loadingDataset = true;
+        _suppressHistory = true;
         try
         {
             _currentDatasetId = dataset.Id;
@@ -227,8 +228,12 @@ public partial class MainWindowViewModel
         }
         finally
         {
+            _suppressHistory = false;
             _loadingDataset = false;
         }
+
+        RebuildLastValues();
+        ResetHistory();
     }
 
     private void RefreshUserDatasetsList()
@@ -293,6 +298,7 @@ public partial class MainWindowViewModel
     {
         // Part: reset the workspace after deleting a dataset.
         _loadingDataset = true;
+        _suppressHistory = true;
         IsResettingDataset = true;
         try
         {
@@ -310,8 +316,12 @@ public partial class MainWindowViewModel
         finally
         {
             IsResettingDataset = false;
+            _suppressHistory = false;
             _loadingDataset = false;
         }
+
+        RebuildLastValues();
+        ResetHistory();
     }
 
     private void AutoSaveCurrentDataset()

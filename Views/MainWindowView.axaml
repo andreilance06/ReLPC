@@ -15,6 +15,10 @@
         MinWidth="1280"
         MinHeight="720"
         WindowStartupLocation="CenterScreen">
+    <Window.KeyBindings>
+        <KeyBinding Gesture="Ctrl+Z" Command="{Binding UndoCommand}" />
+        <KeyBinding Gesture="Ctrl+Y" Command="{Binding RedoCommand}" />
+    </Window.KeyBindings>
     <Window.Styles>
         <Style Selector="StackPanel Button">
             <Setter Property="Background" Value="Transparent" />
@@ -52,6 +56,7 @@
                         Background="Transparent"
                         BorderThickness="0"
                         Cursor="Hand"
+                        Command="{Binding UndoCommand}"
                         ToolTip.Tip="Undo (Ctrl+Z)">
                     <Image Source="/Assets/elements/undo.png"
                            Height="20" />
@@ -62,6 +67,7 @@
                         Background="Transparent"
                         BorderThickness="0"
                         Cursor="Hand"
+                        Command="{Binding RedoCommand}"
                         ToolTip.Tip="Redo (Ctrl+Y)">
                     <Image Source="/Assets/elements/redo.png"
                            Height="20" />
