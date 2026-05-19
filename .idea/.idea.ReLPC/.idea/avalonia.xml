@@ -6,6 +6,7 @@
         <entry key="Views/DashboardWindowView.axaml" value="ReLPC.csproj" />
         <entry key="Views/DatasetPickerWindowView.axaml" value="ReLPC.csproj" />
         <entry key="Views/LoginWindowView.axaml" value="ReLPC.csproj" />
+        <entry key="Views/MainWindowView.axaml" value="ReLPC.csproj" />
         <entry key="Views/MessageWindowView.axaml" value="ReLPC.csproj" />
       </map>
     </option>

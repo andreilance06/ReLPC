@@ -250,6 +250,25 @@ public partial class MainWindowViewModel
         RefreshUserDatasetsList();
     }
 
+    private void AutoSaveCurrentDataset()
+    {
+        if (_loadingDataset)
+            return;
+
+        if (_currentDatasetId == 0 && !HasDatasetContent())
+            return;
+
+        SaveCurrentDataset();
+    }
+
+    private bool HasDatasetContent()
+    {
+        if (!string.IsNullOrWhiteSpace(DatasetName))
+            return true;
+
+        return Inputs.Any(point => point.X.HasValue || point.Y.HasValue);
+    }
+
     private void PersistDatasetNameOnly()
     {
         if (_currentDatasetId == 0)

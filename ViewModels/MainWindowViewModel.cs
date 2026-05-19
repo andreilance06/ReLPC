@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Specialized;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -54,6 +56,7 @@ public partial class MainWindowViewModel : ViewModelBase
         _windowService = windowService;
         _recentDatasets = recentDatasets;
         _exportService = exportService;
+        Inputs.CollectionChanged += OnInputsCollectionChanged;
 
         DegreeText = "2";
         PredictionXText = "";
@@ -72,32 +75,56 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public void TidyRows()
     {
-        // 1. Count how many empty rows we currently have at the very bottom.
-        var trailingEmptyCount = 0;
-
-        if (Inputs.Count > 0 && Inputs[^1].IsEmpty)
-            trailingEmptyCount++;
-
-        if (Inputs.Count > 1 && Inputs[^2].IsEmpty && Inputs[^1].IsEmpty)
-            trailingEmptyCount++;
-
-        // 2. Top off the collection until exactly two trailing empty rows exist.
-        while (trailingEmptyCount < 2)
+        if (Inputs.Count == 0)
         {
             Inputs.Add(new Point());
-            trailingEmptyCount++;
+            return;
         }
+
+        while (Inputs.Count > 1 && Inputs[^1].IsEmpty && Inputs[^2].IsEmpty)
+            Inputs.RemoveAt(Inputs.Count - 1);
+
+        if (!Inputs[^1].IsEmpty)
+            Inputs.Add(new Point());
     }
 
     public void DatasetChanged()
     {
         TidyRows();
         Calculate();
+        AutoSaveCurrentDataset();
     }
 
-    partial void OnSelectedRegressionIndexChanged(int value) => Calculate();
-    partial void OnDegreeTextChanged(string value) => Calculate();
+    partial void OnSelectedRegressionIndexChanged(int value) => RecalculateAndSave();
+    partial void OnDegreeTextChanged(string value) => RecalculateAndSave();
     partial void OnPredictionXTextChanged(string value) => UpdatePrediction();
+
+    private void RecalculateAndSave()
+    {
+        Calculate();
+        AutoSaveCurrentDataset();
+    }
+
+    private void OnInputsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        if (e.OldItems is not null)
+        {
+            foreach (Point point in e.OldItems)
+                point.PropertyChanged -= OnInputPointPropertyChanged;
+        }
+
+        if (e.NewItems is not null)
+        {
+            foreach (Point point in e.NewItems)
+                point.PropertyChanged += OnInputPointPropertyChanged;
+        }
+    }
+
+    private void OnInputPointPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(Point.X) or nameof(Point.Y))
+            DatasetChanged();
+    }
 
     private void Calculate()
     {
@@ -222,7 +249,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         co.AppendLine($"Polynomial (degree {degree}):");
         for (int i = 0; i < coeffs.Length; i++)
-            co.AppendLine($"  c{i} = {Fmt(coeffs[i])}");
+            co.AppendLine($"  c{ToSubscript(i)} = {Fmt(coeffs[i])}");
         co.AppendLine($"  R² = {Fmt(r2)}");
 
         it.AppendLine($"Polynomial intermediates (normal equations):");
@@ -230,13 +257,13 @@ public partial class MainWindowViewModel : ViewModelBase
         for (int k = 1; k <= 2 * degree; k++)
         {
             var sk = xs.Select(x => Math.Pow(x, k)).Sum();
-            it.AppendLine($"  Σx^{k} = {Fmt(sk)}");
+            it.AppendLine($"  Σx{ToSuperscript(k)} = {Fmt(sk)}");
         }
 
         for (int k = 0; k <= degree; k++)
         {
             var sk = xs.Zip(ys, (x, y) => Math.Pow(x, k) * y).Sum();
-            it.AppendLine($"  Σx^{k}·y = {Fmt(sk)}");
+            it.AppendLine($"  Σx{ToSuperscript(k)}·y = {Fmt(sk)}");
         }
     }
 
@@ -318,12 +345,23 @@ public partial class MainWindowViewModel : ViewModelBase
             {
                 0 => absVal,
                 1 => $"{absVal}x",
-                _ => $"{absVal}x^{i}"
+                _ => $"{absVal}x{ToSuperscript(i)}"
             };
             sb.Append(sign).Append(term);
         }
 
         return sb.ToString();
+    }
+
+    private static string ToSuperscript(int value) => ConvertDigits(value, "⁰¹²³⁴⁵⁶⁷⁸⁹");
+
+    private static string ToSubscript(int value) => ConvertDigits(value, "₀₁₂₃₄₅₆₇₈₉");
+
+    private static string ConvertDigits(int value, string digits)
+    {
+        var text = value.ToString(CultureInfo.InvariantCulture);
+        var chars = text.Select(ch => char.IsDigit(ch) ? digits[ch - '0'] : ch).ToArray();
+        return new string(chars);
     }
 
     private static string Fmt(double v) => v.ToString("0.######", CultureInfo.InvariantCulture);

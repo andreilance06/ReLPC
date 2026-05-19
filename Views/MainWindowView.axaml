@@ -8,7 +8,8 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="ReLPC"
-        Background="#20100B">
+        Background="#20100B"
+        WindowStartupLocation="CenterScreen">
     <Window.Styles>
         <Style Selector="StackPanel Button">
             <Setter Property="Background" Value="Transparent" />
@@ -338,7 +339,7 @@
                                         Padding="0,0,0,12">
                                     <TextBlock Text="{Binding Equation}"
                                                TextWrapping="Wrap"
-                                               FontFamily="Cascadia Code,Consolas,Menlo,monospace"
+                                               FontFamily="avares://ReLPC/Assets/fonts/latinmodern-math.otf#Latin Modern Math"
                                                FontSize="18"
                                                Foreground="#171717" />
                                 </Border>
@@ -353,7 +354,7 @@
                                         Padding="0,0,0,12">
                                     <TextBlock Text="{Binding Coefficient}"
                                                TextWrapping="Wrap"
-                                               FontFamily="Cascadia Code,Consolas,Menlo,monospace"
+                                               FontFamily="avares://ReLPC/Assets/fonts/latinmodern-math.otf#Latin Modern Math"
                                                FontSize="16"
                                                Foreground="#171717" />
                                 </Border>
@@ -368,7 +369,7 @@
                                         Padding="0,0,0,12">
                                     <TextBlock Text="{Binding Intermediates}"
                                                TextWrapping="Wrap"
-                                               FontFamily="Cascadia Code,Consolas,Menlo,monospace"
+                                               FontFamily="avares://ReLPC/Assets/fonts/latinmodern-math.otf#Latin Modern Math"
                                                FontSize="14"
                                                Foreground="#171717" />
                                 </Border>
@@ -401,7 +402,7 @@
                                         </StackPanel>
                                         <TextBlock Text="{Binding Prediction}"
                                                    TextWrapping="Wrap"
-                                                   FontFamily="Cascadia Code,Consolas,Menlo,monospace"
+                                                   FontFamily="avares://ReLPC/Assets/fonts/latinmodern-math.otf#Latin Modern Math"
                                                    FontSize="16"
                                                    Foreground="#171717" />
                                     </StackPanel>
