@@ -10,8 +10,8 @@ namespace ReLPC.Services;
 
 public interface IExportService
 {
-    byte[] ExportDatasetToPdf(DatasetRecord dataset);
-    void ExportDataset(string filePath, DatasetRecord dataset);
+    byte[] ExportDatasetToPdf(DatasetRecord dataset, byte[]? chartImageBytes = null);
+    void ExportDataset(string filePath, DatasetRecord dataset, byte[]? chartImageBytes = null);
 }
 
 public sealed class ExportService : IExportService
@@ -28,21 +28,19 @@ public sealed class ExportService : IExportService
         EnsureFonts();
     }
 
-    public byte[] ExportDatasetToPdf(DatasetRecord dataset)
+    public byte[] ExportDatasetToPdf(DatasetRecord dataset, byte[]? chartImageBytes = null)
     {
         ArgumentNullException.ThrowIfNull(dataset);
-
         using var buffer = new MemoryStream();
-        CreateDocument(dataset).GeneratePdf(buffer);
+        CreateDocument(dataset, chartImageBytes).GeneratePdf(buffer);
         return buffer.ToArray();
     }
 
-    public void ExportDataset(string filePath, DatasetRecord dataset)
+    public void ExportDataset(string filePath, DatasetRecord dataset, byte[]? chartImageBytes = null)
     {
         ArgumentNullException.ThrowIfNull(dataset);
         ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
-
-        CreateDocument(dataset).GeneratePdf(filePath);
+        CreateDocument(dataset, chartImageBytes).GeneratePdf(filePath);
     }
 
     private static void EnsureFonts()
@@ -83,7 +81,7 @@ public sealed class ExportService : IExportService
             Path.Combine("Assets", "fonts", "latinmodern-math.otf"));
     }
 
-    private static Document CreateDocument(DatasetRecord dataset) =>
+    private static Document CreateDocument(DatasetRecord dataset, byte[]? chartImageBytes) =>
         Document.Create(container =>
         {
             container.Page(page =>
@@ -142,6 +140,27 @@ public sealed class ExportService : IExportService
 
                                 AddDataPointsToSummary(summary, dataset);
                             });
+
+                            if (chartImageBytes is { Length: > 0 })
+                            {
+                                panel.Item().Column(chartSection =>
+                                {
+                                    chartSection.Spacing(8);
+
+                                    chartSection.Item().Text("CHART")
+                                        .FontFamily(HeaderFontFamily)
+                                        .FontSize(14)
+                                        .Bold()
+                                        .FontColor(ExportTheme.Accent);
+
+                                    chartSection.Item()
+                                        .BorderBottom(1)
+                                        .BorderColor(ExportTheme.SectionDivider)
+                                        .PaddingBottom(12)
+                                        .Image(chartImageBytes)
+                                        .FitWidth();
+                                });
+                            }
 
                             AddResultSection(panel, "EQUATION", dataset.Equation ?? "No Calculation Yet", 20, 54);
                             AddResultSection(panel, "COEFFICIENT", dataset.Coefficient ?? "-", 18, 82);

@@ -12,6 +12,7 @@ using LiveChartsCore;
 using LiveChartsCore.Defaults;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
+using LiveChartsCore.SkiaSharpView.SKCharts;
 using MathNet.Numerics;
 using ReLPC.Models;
 using ReLPC.Services;
@@ -46,9 +47,14 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] public partial string Prediction { get; set; }
 
     // Feature: regression settings and prediction input bindings.
-    [ObservableProperty] public partial int SelectedRegressionIndex { get; set; }
+    [NotifyPropertyChangedFor(nameof(ShowDegreeInput))]
+    [ObservableProperty]
+    public partial int SelectedRegressionIndex { get; set; }
+
     [ObservableProperty] public partial string DegreeText { get; set; }
     [ObservableProperty] public partial string PredictionXText { get; set; }
+
+    public bool ShowDegreeInput => SelectedRegressionIndex is 1 or 2;
 
     private double[]? _linearCoeffs;
     private double[]? _polyCoeffs;
@@ -92,6 +98,22 @@ public partial class MainWindowViewModel : ViewModelBase
         RebuildLastValues();
         ResetHistory();
         RefreshUserDatasetsList();
+    }
+
+    public byte[] RenderChartToPng(int width = 800, int height = 450)
+    {
+        var chart = new SKCartesianChart
+        {
+            Width = width,
+            Height = height,
+            Series = Series.ToArray(),
+            LegendPosition = LiveChartsCore.Measure.LegendPosition.Bottom,
+            Background = SKColors.White,
+        };
+
+        using var image = chart.GetImage();
+        using var data = image.Encode(SKEncodedImageFormat.Png, 100);
+        return data.ToArray();
     }
 
     public void TidyRows()
@@ -374,6 +396,7 @@ public partial class MainWindowViewModel : ViewModelBase
             GeometrySize = 10,
             Fill = new SolidColorPaint(new SKColor(0xFF, 0x31, 0x31)),
             Stroke = null,
+            YToolTipLabelFormatter = point => $"Y = {point.Model?.Y:0.####}"
         });
 
         if (pts.Count < 2) return;
@@ -390,13 +413,13 @@ public partial class MainWindowViewModel : ViewModelBase
             Series.Add(new LineSeries<ObservablePoint>
             {
                 Name = "Linear",
-                Values = new[]
-                {
+                Values =
+                [
                     new ObservablePoint(minX, a + b * minX),
-                    new ObservablePoint(maxX, a + b * maxX),
-                },
+                    new ObservablePoint(maxX, a + b * maxX)
+                ],
                 Fill = null,
-                GeometrySize = 0,
+                GeometrySize = 10,
                 Stroke = new SolidColorPaint(new SKColor(0x17, 0x9E, 0xFF)) { StrokeThickness = 2 },
             });
         }
@@ -417,7 +440,7 @@ public partial class MainWindowViewModel : ViewModelBase
                 Name = "Polynomial",
                 Values = pointsOut,
                 Fill = null,
-                GeometrySize = 0,
+                GeometrySize = 10,
                 LineSmoothness = 1,
                 Stroke = new SolidColorPaint(new SKColor(0x2E, 0xC4, 0x6B)) { StrokeThickness = 2 },
             });

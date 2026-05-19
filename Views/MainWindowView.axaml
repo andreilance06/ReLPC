@@ -323,6 +323,7 @@
                                      Padding="14, 7"
                                      VerticalContentAlignment="Center"
                                      PlaceholderText="Degree"
+                                     IsVisible="{Binding ShowDegreeInput}"
                                      Text="{Binding DegreeText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                             <ComboBox Grid.Column="2"
                                       Height="46"

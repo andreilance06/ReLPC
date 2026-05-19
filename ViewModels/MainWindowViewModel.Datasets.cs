@@ -170,7 +170,8 @@ public partial class MainWindowViewModel
                 return;
 
             var record = BuildDatasetRecordForExport();
-            var pdfBytes = _exportService.ExportDatasetToPdf(record);
+            byte[] chartPng = RenderChartToPng();
+            var pdfBytes = _exportService.ExportDatasetToPdf(record, chartPng);
 
             await using (var stream = await file.OpenWriteAsync())
             {
