@@ -141,6 +141,7 @@ public partial class MainWindowViewModel : ViewModelBase
                     RecordRowRemove(idx, point);
                     _lastValues.Remove(point);
                 }
+
                 idx++;
             }
         }
@@ -156,6 +157,7 @@ public partial class MainWindowViewModel : ViewModelBase
                     RecordRowInsert(idx, point);
                     _lastValues[point] = (point.X, point.Y);
                 }
+
                 idx++;
             }
         }
@@ -371,7 +373,7 @@ public partial class MainWindowViewModel : ViewModelBase
             Values = pts.Select(p => new ObservablePoint(p.X, p.Y)).ToArray(),
             GeometrySize = 10,
             Fill = new SolidColorPaint(new SKColor(0xFF, 0x31, 0x31)),
-            Stroke = null
+            Stroke = null,
         });
 
         if (pts.Count < 2) return;
@@ -480,5 +482,4 @@ public partial class MainWindowViewModel : ViewModelBase
     }
 
     private static string Fmt(double v) => v.ToString("0.######", CultureInfo.InvariantCulture);
-
 }
