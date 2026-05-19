@@ -23,6 +23,7 @@ public enum RegressionMode
 
 public partial class MainWindowViewModel : ViewModelBase
 {
+    // Feature: data entry grid rows shown in the main workspace.
     public ObservableCollection<Point> Inputs { get; } = [];
     public ObservableCollection<Point> Outputs { get; } = [];
 
@@ -30,11 +31,13 @@ public partial class MainWindowViewModel : ViewModelBase
     private readonly IDatabaseService _databaseService;
     private readonly IWindowService _windowService;
 
+    // Feature: calculation result text shown in the results panel.
     [ObservableProperty] public partial string Equation { get; set; }
     [ObservableProperty] public partial string Coefficient { get; set; }
     [ObservableProperty] public partial string Intermediates { get; set; }
     [ObservableProperty] public partial string Prediction { get; set; }
 
+    // Feature: regression settings and prediction input bindings.
     [ObservableProperty] public partial int SelectedRegressionIndex { get; set; }
     [ObservableProperty] public partial string DegreeText { get; set; }
     [ObservableProperty] public partial string PredictionXText { get; set; }
@@ -75,6 +78,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public void TidyRows()
     {
+        // Part: keep one blank row available at the end of the data entry grid.
         if (Inputs.Count == 0)
         {
             Inputs.Add(new Point());
@@ -128,6 +132,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void Calculate()
     {
+        // Feature: read valid data rows, run the selected regression mode, and update result text.
         _linearCoeffs = null;
         _polyCoeffs = null;
 
@@ -180,6 +185,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void BuildLinear(double[] xs, double[] ys, StringBuilder eq, StringBuilder co, StringBuilder it)
     {
+        // Feature: linear regression calculation and display text.
         // Fit.Line returns (a, b) such that y = a + b·x
         var (a, b) = Fit.Line(xs, ys);
         _linearCoeffs = [a, b];
@@ -217,6 +223,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void BuildPolynomial(double[] xs, double[] ys, StringBuilder eq, StringBuilder co, StringBuilder it)
     {
+        // Feature: polynomial regression calculation and display text.
         if (eq.Length > 0) eq.AppendLine();
         if (co.Length > 0) co.AppendLine();
         if (it.Length > 0) it.AppendLine();
@@ -269,6 +276,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
     private void UpdatePrediction()
     {
+        // Feature: prediction output for the user-entered X value.
         var mode = (RegressionMode)SelectedRegressionIndex;
         bool hasLinear = _linearCoeffs is not null && mode is RegressionMode.Linear or RegressionMode.Both;
         bool hasPoly = _polyCoeffs is not null && mode is RegressionMode.Polynomial or RegressionMode.Both;

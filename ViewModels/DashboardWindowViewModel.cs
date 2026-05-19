@@ -14,6 +14,7 @@ namespace ReLPC.ViewModels;
 
 public partial class DashboardWindowViewModel : ViewModelBase
 {
+    // Feature: services used by dashboard actions and recent dataset loading.
     private readonly IRecentDatasetsService _recentDatasets;
     private readonly IDatabaseService _database;
     private readonly ISessionService _session;
@@ -31,6 +32,7 @@ public partial class DashboardWindowViewModel : ViewModelBase
         _windowService = windowService;
     }
 
+    // Feature: recent dataset collections shown in the dashboard.
     public ObservableCollection<DashboardDatasetItem> FeaturedDatasets { get; } = [];
     public ObservableCollection<DashboardDatasetItem> MoreDatasets { get; } = [];
 
@@ -50,6 +52,7 @@ public partial class DashboardWindowViewModel : ViewModelBase
 
     public void RefreshRecentDatasets()
     {
+        // Feature: refresh recent datasets and split them into tile/list sections.
         var userId = _session.CurrentUser?.Id ?? 0;
         var ownerCaption = OwnerCaption;
 
@@ -82,6 +85,7 @@ public partial class DashboardWindowViewModel : ViewModelBase
     [RelayCommand]
     private void CreateNewDataset()
     {
+        // Feature: dashboard command to create and open a new dataset.
         var userId = _session.CurrentUser?.Id ?? 0;
         var dataset = _database.CreateDataset(userId, $"Untitled Dataset {DateTime.Now:yyyy-MM-dd HH-mm}");
         OpenDataset(dataset);
@@ -92,6 +96,7 @@ public partial class DashboardWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task LoadDatasetAsync()
     {
+        // Feature: dashboard command to choose and open an existing dataset.
         if (HostWindow is null)
             return;
 
@@ -106,6 +111,7 @@ public partial class DashboardWindowViewModel : ViewModelBase
     [RelayCommand]
     private void OpenRecentDataset(DashboardDatasetItem? item)
     {
+        // Feature: open a dataset selected from the recent dataset browser.
         if (item?.Dataset is null)
             return;
 
@@ -115,6 +121,7 @@ public partial class DashboardWindowViewModel : ViewModelBase
     [RelayCommand]
     private async Task LogoutAsync()
     {
+        // Feature: dashboard logout confirmation and return to login.
         if (HostWindow is null)
             return;
 
@@ -134,6 +141,7 @@ public partial class DashboardWindowViewModel : ViewModelBase
 
     private void OpenDataset(DatasetRecord dataset)
     {
+        // Part: shared dashboard navigation into the main workspace.
         var userId = _session.CurrentUser?.Id ?? 0;
         _recentDatasets.RecordOpened(userId, dataset.Id);
 
@@ -151,6 +159,7 @@ public partial class DashboardWindowViewModel : ViewModelBase
 
     private List<DatasetRecord> BuildOrderedDatasetList(int userId)
     {
+        // Part: combine recent history with all saved datasets without duplicates.
         var recent = _recentDatasets.GetRecentDatasets(userId);
         var allFromDb = _database.GetDatasets(userId);
         var ordered = new List<DatasetRecord>();

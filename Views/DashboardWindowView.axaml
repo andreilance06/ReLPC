@@ -18,6 +18,7 @@
   <Grid ColumnDefinitions="320,*"
         RowDefinitions="*">
 
+    <!-- Feature: dashboard sidebar with user greeting and primary actions. -->
     <Border x:Name="SidebarPanel"
             Grid.Column="0"
             CornerRadius="0,10,10,0"
@@ -48,6 +49,7 @@
         <StackPanel Grid.Row="1"
                     Margin="0,60,0,0"
                     Spacing="20">
+          <!-- Part: create a new dataset from the dashboard. -->
           <Button Background="Transparent"
                   BorderThickness="0"
                   Padding="0"
@@ -64,6 +66,7 @@
             </StackPanel>
           </Button>
 
+          <!-- Part: load an existing dataset from the dashboard. -->
           <Button Background="Transparent"
                   BorderThickness="0"
                   Padding="0"
@@ -80,6 +83,7 @@
             </StackPanel>
           </Button>
 
+          <!-- Part: logout action from the dashboard. -->
           <Button Background="Transparent"
                   BorderThickness="0"
                   Padding="0"
@@ -99,6 +103,7 @@
       </Grid>
     </Border>
 
+    <!-- Feature: recent dataset browser. -->
     <ScrollViewer Grid.Column="1"
                   Margin="40,60,40,40"
                   VerticalScrollBarVisibility="Auto">
@@ -108,6 +113,7 @@
                    FontWeight="Black"
                    Foreground="#FF4B34"/>
 
+        <!-- Part: first three recent datasets shown as preview tiles. -->
         <ItemsControl ItemsSource="{Binding FeaturedDatasets}">
           <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
@@ -140,6 +146,7 @@
           </ItemsControl.ItemTemplate>
         </ItemsControl>
 
+        <!-- Part: remaining recent datasets shown as a compact list. -->
         <StackPanel Spacing="0" IsVisible="{Binding HasMoreDatasets}">
           <Border BorderBrush="#FF4B34" BorderThickness="0,0,0,1" Margin="0,0,0,10"/>
 
@@ -173,6 +180,7 @@
           </ItemsControl>
         </StackPanel>
 
+        <!-- Part: empty state when no recent datasets exist. -->
         <TextBlock Text="Open or create a dataset to see it here."
                    FontSize="14"
                    Foreground="#FF4B34"

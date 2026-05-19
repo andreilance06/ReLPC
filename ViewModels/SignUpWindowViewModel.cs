@@ -13,6 +13,7 @@ public partial class SignUpWindowViewModel(
     IDatabaseService databaseService,
     IWindowService windowService) : ViewModelBase
 {
+    // Feature: sign-up form fields and status message.
     public string? Username { get; set; }
 
     public string? Password { get; set; }
@@ -24,6 +25,7 @@ public partial class SignUpWindowViewModel(
     [RelayCommand(AllowConcurrentExecutions = false)]
     private async Task AttemptSignup()
     {
+        // Feature: validate sign-up fields, hash the password, and save the new user.
         SignupStatus = "";
         var nextStatus = "";
         // Goldilocks Delay

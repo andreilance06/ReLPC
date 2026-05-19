@@ -46,6 +46,7 @@
     <Viewbox>
         <Grid Name="PageRoot" ColumnDefinitions="10*,9*" Width="1920" Height="1080" Background="Gray">
 
+            <!-- Part: left-side login message/brand area. -->
             <StackPanel Grid.Column="0" Margin="86">
                 <TextBlock Text="READY TO CONTINUE?"
                            FontSize="72"
@@ -58,6 +59,7 @@
             </StackPanel>
 
 
+            <!-- Feature: login panel with credentials, status, submit, and sign-up link. -->
             <Border Name="LoginPanel" Grid.Column="1" Margin="60,80" Background="DarkGray" CornerRadius="16">
                 <StackPanel HorizontalAlignment="Center">
                     <Image
@@ -71,6 +73,7 @@
 
                     <StackPanel Margin="50, 25">
 
+                        <!-- Part: student ID input. -->
                         <TextBlock Text="STUDENT ID"
                                    FontSize="30"
                                    FontWeight="SemiBold"
@@ -86,6 +89,7 @@
                                  CornerRadius="12"
                                  Text="{Binding Username}" />
 
+                        <!-- Part: password input with show/hide toggle. -->
                         <TextBlock Text="PASSWORD"
                                    FontSize="30"
                                    FontWeight="SemiBold"
@@ -110,6 +114,7 @@
                             </TextBox.InnerRightContent>
                         </TextBox>
 
+                        <!-- Part: login validation/status message. -->
                         <TextBlock
                             Text="{Binding LoginStatus}"
                             Foreground="White"
@@ -119,6 +124,7 @@
                             Margin="0,14,0,0"
                             MinHeight="20" />
 
+                        <!-- Part: submit login command. -->
                         <Button Content="LOGIN"
                                 Command="{Binding AttemptLoginCommand}"
                                 IsEnabled="{Binding !AttemptLoginCommand.IsRunning}"
@@ -135,6 +141,7 @@
                                 CornerRadius="34"
                                 Margin="30" />
 
+                        <!-- Part: open the sign-up window. -->
                         <Button
                             HorizontalAlignment="Center"
                             Background="Transparent"

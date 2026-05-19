@@ -11,6 +11,7 @@ public partial class LoginWindowViewModel(
     IWindowService windowService,
     IRecentDatasetsService recentDatasetsService) : ViewModelBase
 {
+    // Feature: login form fields and status message.
     [ObservableProperty] public partial string Username { get; set; } = "";
 
     [ObservableProperty] public partial string Password { get; set; } = "";
@@ -20,6 +21,7 @@ public partial class LoginWindowViewModel(
     [RelayCommand(AllowConcurrentExecutions = false)]
     private async Task AttemptLogin()
     {
+        // Feature: validate credentials, set the active session, and open the dashboard.
         LoginStatus = "";
         var nextStatus = "";
         var navigated = false;
@@ -79,6 +81,7 @@ public partial class LoginWindowViewModel(
     [RelayCommand]
     private void OpenSignupWindow()
     {
+        // Feature: open or focus the sign-up window from the login screen.
         var window = windowService.FindWindowFromDataModel(typeof(SignUpWindowViewModel));
         if (window is not null)
             window.Activate();

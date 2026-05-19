@@ -16,15 +16,19 @@ namespace ReLPC.ViewModels;
 
 public partial class MainWindowViewModel
 {
+    // Feature: services and state used by dataset navigation, persistence, export, and logout.
     private readonly IRecentDatasetsService _recentDatasets;
     private readonly IExportService _exportService;
     private bool _suppressDatasetSelection;
     private bool _loadingDataset;
 
+    // Feature: collapsed/expanded side menu visibility.
     [ObservableProperty] public partial bool IsMenuExpanded { get; set; }
 
+    // Feature: dataset explorer panel visibility.
     [ObservableProperty] public partial bool IsDatasetPanelVisible { get; set; } = true;
 
+    // Feature: dataset name editor and selected dataset binding.
     [ObservableProperty] public partial string DatasetName { get; set; } = string.Empty;
 
     [ObservableProperty] public partial DatasetRecord? SelectedDataset { get; set; }
@@ -56,9 +60,11 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private void ToggleMenu() => IsMenuExpanded = !IsMenuExpanded;
 
+    // Feature: show/hide the dataset explorer panel from the side menu.
     [RelayCommand]
     private void ToggleDatasetPanel() => IsDatasetPanelVisible = !IsDatasetPanelVisible;
 
+    // Feature: return from the workspace to the dashboard.
     [RelayCommand]
     private void GoToDashboard()
     {
@@ -73,6 +79,7 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private void CreateNewDataset()
     {
+        // Feature: create a saved dataset and open it in the workspace.
         var userId = _sessionService.CurrentUser?.Id ?? 0;
         var dataset = _databaseService.CreateDataset(userId,
             $"Untitled Dataset {DateTime.Now:yyyy-MM-dd HH-mm}");
@@ -82,6 +89,7 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private async Task PickAndLoadDatasetAsync()
     {
+        // Feature: open the dataset picker dialog and load the selected dataset.
         if (HostWindow is null)
             return;
 
@@ -98,6 +106,7 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private async Task DeleteCurrentDatasetAsync()
     {
+        // Feature: confirm and delete the currently selected dataset.
         if (_currentDatasetId == 0)
         {
             if (HostWindow is not null)
@@ -122,6 +131,7 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private async Task ExportPdfAsync()
     {
+        // Feature: export the current dataset, points, and calculation output as a PDF.
         if (HostWindow is null)
             return;
 
@@ -184,6 +194,7 @@ public partial class MainWindowViewModel
 
     public void LoadDataset(DatasetRecord dataset)
     {
+        // Feature: load dataset metadata, points, saved calculations, and recent history.
         _loadingDataset = true;
         try
         {
@@ -222,6 +233,7 @@ public partial class MainWindowViewModel
 
     private void RefreshUserDatasetsList()
     {
+        // Part: refresh the dataset explorer list for the current user.
         _suppressDatasetSelection = true;
         try
         {
@@ -240,6 +252,7 @@ public partial class MainWindowViewModel
 
     private void SaveCurrentDataset()
     {
+        // Feature: persist dataset name, points, and calculation output.
         var userId = _sessionService.CurrentUser?.Id ?? 0;
 
         if (_currentDatasetId == 0)
@@ -278,6 +291,7 @@ public partial class MainWindowViewModel
 
     private void ClearCurrentDataset()
     {
+        // Part: reset the workspace after deleting a dataset.
         _loadingDataset = true;
         IsResettingDataset = true;
         try
@@ -302,6 +316,7 @@ public partial class MainWindowViewModel
 
     private void AutoSaveCurrentDataset()
     {
+        // Feature: save automatically after data or calculation changes.
         if (_loadingDataset)
             return;
 
@@ -372,6 +387,7 @@ public partial class MainWindowViewModel
     [RelayCommand]
     private async Task LogoutAsync()
     {
+        // Feature: confirm logout and return to the login screen.
         if (HostWindow is null)
             return;
 

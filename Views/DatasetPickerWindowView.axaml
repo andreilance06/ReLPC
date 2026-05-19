@@ -16,11 +16,13 @@
         Background="Transparent">
 
   <Grid>
+    <!-- Feature: modal dataset picker used by dashboard and workspace load actions. -->
     <Border Margin="8"
             Padding="24"
             Background="#FFF8F3"
             CornerRadius="14">
       <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Part: custom title bar and close button. -->
         <Grid ColumnDefinitions="*,Auto"
               PointerPressed="OnTitleBarPointerPressed">
           <TextBlock Text="Load Dataset"
@@ -42,12 +44,14 @@
           </Button>
         </Grid>
 
+        <!-- Part: saved dataset list. -->
         <ListBox x:Name="DatasetsListBox"
                  Grid.Row="1"
                  Margin="0,18,0,18"
                  Background="White"
                  Foreground="#171717"/>
 
+        <!-- Part: cancel/load actions. -->
         <StackPanel Grid.Row="2"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right"

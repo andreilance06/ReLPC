@@ -23,6 +23,7 @@
         </Style>
     </Window.Styles>
     <Grid>
+        <!-- Part: blurred orange/red background behind the workspace. -->
         <Canvas Opacity="0.80">
             <Rectangle Width="2e6"
                        Height="{Binding $parent.Bounds.Height}"
@@ -40,6 +41,7 @@
         </Canvas>
 
         <Grid RowDefinitions="Auto, *, Auto">
+            <!-- Part: top toolbar with app logo and undo/redo buttons. -->
             <StackPanel Grid.Row="0" Margin="8, 8, 8, 0" Orientation="Horizontal" VerticalAlignment="Center"
                         Spacing="3">
                 <Image Source="/Assets/icons-logo/icon-logo.png" Width="40" Margin="10, 0"></Image>
@@ -69,6 +71,7 @@
             <Grid Row="1" ColumnDefinitions="Auto, Auto, 500, *" Margin="8"
                   ColumnSpacing="3">
 
+                <!-- Feature: collapsed side menu with icon-only navigation/actions. -->
                 <Border Name="MinDashboard" Grid.Column="0" Width="60" CornerRadius="8"
                         IsVisible="{Binding !IsMenuExpanded}">
                     <Border.Background>
@@ -117,6 +120,7 @@
 
                 </Border>
 
+                <!-- Feature: expanded side menu with labeled navigation/actions. -->
                 <Border Name="MaxDashboard" Grid.Column="0" Width="200" CornerRadius="8"
                         IsVisible="{Binding IsMenuExpanded}">
                     <Border.Background>
@@ -224,6 +228,7 @@
                     </Grid>
                 </Border>
 
+                <!-- Feature: dataset explorer panel listing saved datasets for the current user. -->
                 <Border Name="DatasetPanel" Grid.Column="1" Width="160" CornerRadius="8" Background="White"
                         IsVisible="{Binding IsDatasetPanelVisible}">
                     <StackPanel Spacing="10" Margin="16,24">
@@ -247,6 +252,7 @@
                     </StackPanel>
                 </Border>
 
+                <!-- Feature: data entry panel for dataset name, X/Y rows, and regression settings. -->
                 <Border Grid.Column="2" CornerRadius="8" Background="White">
                     <Grid RowDefinitions="Auto, *, Auto"
                           Margin="40, 20">
@@ -270,7 +276,7 @@
                                        Foreground="#ff3131" />
                         </StackPanel>
 
-                        <!-- table of values -->
+                        <!-- Part: editable table of X/Y values. -->
                         <DataGrid Grid.Row="1"
                                   ItemsSource="{Binding Inputs}"
                                   AutoGenerateColumns="True"
@@ -296,7 +302,7 @@
                             </DataGrid.Styles>
                         </DataGrid>
 
-                        <!-- calculation settings -->
+                        <!-- Part: calculation settings for polynomial degree and regression mode. -->
                         <Grid Row="2" ColumnDefinitions="*, Auto, Auto" ColumnSpacing="4">
                             <TextBox Grid.Column="1"
                                      Width="110"
@@ -331,7 +337,7 @@
                     </Grid>
                 </Border>
 
-                <!-- calculation results -->
+                <!-- Feature: calculation results panel for equation, coefficients, intermediates, and prediction. -->
                 <Border Grid.Column="3" CornerRadius="8" Background="White">
                     <Grid RowDefinitions="Auto, *, Auto"
                           Margin="40, 20">
@@ -346,6 +352,7 @@
                                       Margin="0, 24">
                             <StackPanel Spacing="8">
 
+                                <!-- Part: generated regression equation output. -->
                                 <TextBlock Text="EQUATION"
                                            FontSize="14"
                                            FontWeight="Bold"
@@ -361,6 +368,7 @@
                                                Foreground="#171717" />
                                 </Border>
 
+                                <!-- Part: generated coefficient and R-squared output. -->
                                 <TextBlock Text="COEFFICIENT"
                                            FontSize="14"
                                            FontWeight="Bold"
@@ -376,6 +384,7 @@
                                                Foreground="#171717" />
                                 </Border>
 
+                                <!-- Part: generated intermediate computation details. -->
                                 <TextBlock Text="INTERMEDIATE COMPUTATIONS"
                                            FontSize="14"
                                            FontWeight="Bold"
@@ -392,6 +401,7 @@
                                 </Border>
 
 
+                                <!-- Part: prediction input and model output for a chosen X value. -->
                                 <TextBlock Text="PREDICTION"
                                            FontSize="14"
                                            FontWeight="Bold"

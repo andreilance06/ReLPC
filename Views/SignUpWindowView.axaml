@@ -29,6 +29,7 @@
     </Window.Styles>
 
     <Grid Name="PageRoot" Background="#FF5A47">
+        <!-- Feature: sign-up panel with account fields, password toggles, status, and submit. -->
         <Border Name="SignUpPanel"
                 Margin="28"
                 CornerRadius="24"
@@ -41,7 +42,7 @@
                         VerticalAlignment="Center"
                         Spacing="20">
 
-                <!-- Title -->
+                <!-- Part: title. -->
                 <TextBlock Text="Sign Up"
                            Foreground="White"
                            FontSize="40"
@@ -50,7 +51,7 @@
 
                 <StackPanel Width="400" Spacing="16">
 
-                    <!-- STUDENT ID -->
+                    <!-- Part: student ID input. -->
                     <StackPanel Spacing="6">
                         <TextBlock Text="STUDENT ID"
                                    Foreground="White"
@@ -66,7 +67,7 @@
                                  Text="{Binding Username}" />
                     </StackPanel>
 
-                    <!-- PASSWORD -->
+                    <!-- Part: password input with show/hide toggle. -->
                     <StackPanel Spacing="6">
                         <TextBlock Text="PASSWORD"
                                    Foreground="White"
@@ -91,7 +92,7 @@
                         </TextBox>
                     </StackPanel>
 
-                    <!-- CONFIRM PASSWORD -->
+                    <!-- Part: password confirmation input with show/hide toggle. -->
                     <StackPanel Spacing="6">
                         <TextBlock Text="CONFIRM PASSWORD"
                                    Foreground="White"
@@ -117,13 +118,14 @@
                         </TextBox>
                     </StackPanel>
 
+                    <!-- Part: sign-up validation/status message. -->
                     <TextBlock Text="{Binding SignupStatus}"
                                Foreground="White"
                                FontWeight="Bold"
                                FontSize="20"
                                HorizontalAlignment="Center" />
 
-                    <!-- BUTTON -->
+                    <!-- Part: submit sign-up command. -->
                     <Button Content="SIGN UP"
                             Command="{Binding AttemptSignupCommand}"
                             IsEnabled="{Binding !AttemptSignupCommand.IsRunning}"
