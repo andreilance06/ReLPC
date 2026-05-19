@@ -3,6 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:ReLPC.ViewModels"
+        xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
         mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
         x:Class="ReLPC.Views.MainWindowView"
         x:DataType="vm:MainWindowViewModel"
@@ -245,7 +246,7 @@
                                     <TextBlock Text="{Binding DashboardTitle}"
                                                FontSize="13"
                                                Foreground="#ff3131"
-                                               TextWrapping="Wrap"/>
+                                               TextWrapping="Wrap" />
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -258,12 +259,12 @@
                           Margin="40, 20">
                         <StackPanel Grid.Row="0" Spacing="4">
                             <TextBox Text="{Binding DatasetName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                     Watermark="Dataset name"
+                                     PlaceholderText="Dataset name"
                                      FontSize="14"
                                      Foreground="#885038"
                                      Background="Transparent"
                                      BorderThickness="0"
-                                     Padding="0"/>
+                                     Padding="0" />
                             <TextBlock Text="DATA ENTRY"
                                        FontFamily="Arial Black"
                                        FontSize="40"
@@ -351,6 +352,16 @@
                         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
                                       Margin="0, 24">
                             <StackPanel Spacing="8">
+                                <!-- Part: regression visualization chart. -->
+                                <Border
+                                    Height="300"
+                                    Margin="0, 12, 0, 0"
+                                    BorderBrush="#40FF4E3B"
+                                    BorderThickness="0,1,0,0"
+                                    Padding="0,12,0,0">
+                                    <lvc:CartesianChart Series="{Binding Series}"
+                                                        LegendPosition="Bottom" />
+                                </Border>
 
                                 <!-- Part: generated regression equation output. -->
                                 <TextBlock Text="EQUATION"

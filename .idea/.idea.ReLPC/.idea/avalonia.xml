@@ -3,6 +3,8 @@
   <component name="AvaloniaProject">
     <option name="projectPerEditor">
       <map>
+        <entry key="Views/ConfirmDeleteDatasetWindowView.axaml" value="ReLPC.csproj" />
+        <entry key="Views/ConfirmLogoutWindowView.axaml" value="ReLPC.csproj" />
         <entry key="Views/DashboardWindowView.axaml" value="ReLPC.csproj" />
         <entry key="Views/DatasetPickerWindowView.axaml" value="ReLPC.csproj" />
         <entry key="Views/LoginWindowView.axaml" value="ReLPC.csproj" />

@@ -8,9 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using LiveChartsCore;
+using LiveChartsCore.Defaults;
+using LiveChartsCore.SkiaSharpView;
+using LiveChartsCore.SkiaSharpView.Painting;
 using MathNet.Numerics;
 using ReLPC.Models;
 using ReLPC.Services;
+using SkiaSharp;
 
 namespace ReLPC.ViewModels;
 
@@ -26,6 +31,9 @@ public partial class MainWindowViewModel : ViewModelBase
     // Feature: data entry grid rows shown in the main workspace.
     public ObservableCollection<Point> Inputs { get; } = [];
     public ObservableCollection<Point> Outputs { get; } = [];
+
+    // Feature: live chart series shown in the results panel.
+    public ObservableCollection<ISeries> Series { get; } = [];
 
     private readonly ISessionService _sessionService;
     private readonly IDatabaseService _databaseService;
@@ -147,6 +155,7 @@ public partial class MainWindowViewModel : ViewModelBase
             Coefficient = "-";
             Intermediates = "-";
             UpdatePrediction();
+            UpdateChart(pts);
             return;
         }
 
@@ -169,6 +178,7 @@ public partial class MainWindowViewModel : ViewModelBase
         Intermediates = intSb.Length > 0 ? intSb.ToString().TrimEnd() : "-";
 
         UpdatePrediction();
+        UpdateChart(pts);
 
         if (_currentDatasetId > 0 && !_loadingDataset)
         {
@@ -313,6 +323,69 @@ public partial class MainWindowViewModel : ViewModelBase
         }
 
         Prediction = sb.ToString().TrimEnd();
+    }
+
+    private void UpdateChart(System.Collections.Generic.List<(double X, double Y)> pts)
+    {
+        Series.Clear();
+
+        if (pts.Count == 0) return;
+
+        Series.Add(new ScatterSeries<ObservablePoint>
+        {
+            Name = "Data",
+            Values = pts.Select(p => new ObservablePoint(p.X, p.Y)).ToArray(),
+            GeometrySize = 10,
+            Fill = new SolidColorPaint(new SKColor(0xFF, 0x31, 0x31)),
+            Stroke = null
+        });
+
+        if (pts.Count < 2) return;
+
+        var mode = (RegressionMode)SelectedRegressionIndex;
+        double minX = pts.Min(p => p.X);
+        double maxX = pts.Max(p => p.X);
+        if (maxX <= minX) maxX = minX + 1;
+
+        if (_linearCoeffs is not null && mode is RegressionMode.Linear or RegressionMode.Both)
+        {
+            var a = _linearCoeffs[0];
+            var b = _linearCoeffs[1];
+            Series.Add(new LineSeries<ObservablePoint>
+            {
+                Name = "Linear",
+                Values = new[]
+                {
+                    new ObservablePoint(minX, a + b * minX),
+                    new ObservablePoint(maxX, a + b * maxX),
+                },
+                Fill = null,
+                GeometrySize = 0,
+                Stroke = new SolidColorPaint(new SKColor(0x17, 0x9E, 0xFF)) { StrokeThickness = 2 },
+            });
+        }
+
+        if (_polyCoeffs is not null && mode is RegressionMode.Polynomial or RegressionMode.Both)
+        {
+            const int samples = 120;
+            var pointsOut = new ObservablePoint[samples];
+            double step = (maxX - minX) / (samples - 1);
+            for (int i = 0; i < samples; i++)
+            {
+                double x = minX + step * i;
+                pointsOut[i] = new ObservablePoint(x, EvaluatePolynomial(_polyCoeffs, x));
+            }
+
+            Series.Add(new LineSeries<ObservablePoint>
+            {
+                Name = "Polynomial",
+                Values = pointsOut,
+                Fill = null,
+                GeometrySize = 0,
+                LineSmoothness = 1,
+                Stroke = new SolidColorPaint(new SKColor(0x2E, 0xC4, 0x6B)) { StrokeThickness = 2 },
+            });
+        }
     }
 
     private static double EvaluatePolynomial(double[] c, double x)

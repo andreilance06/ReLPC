@@ -34,4 +34,10 @@
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\ConfirmDeleteDatasetWindowView.axaml.cs">
+        <DependentUpon>ConfirmDeleteDatasetWindowView.axaml</DependentUpon>
+      </Compile>
+    </ItemGroup>
 </Project>
