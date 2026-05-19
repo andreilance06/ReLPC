@@ -16,6 +16,7 @@ public interface IDatabaseService
     List<DatasetRecord> GetDatasets(int userId);
     DatasetRecord? GetDataset(int datasetId);
     void UpsertDataset(DatasetRecord dataset);
+    void DeleteDataset(int datasetId, int userId);
 }
 
 public class LiteDBService : IDatabaseService
@@ -107,5 +108,16 @@ public class LiteDBService : IDatabaseService
             col.Insert(dataset);
         else
             col.Update(dataset);
+    }
+
+    public void DeleteDataset(int datasetId, int userId)
+    {
+        using var db = new LiteDatabase(_dbPath);
+        var col = db.GetCollection<DatasetRecord>("datasets");
+        var dataset = col.FindById(datasetId);
+        if (dataset is null || dataset.UserId != userId)
+            return;
+
+        col.Delete(datasetId);
     }
 }

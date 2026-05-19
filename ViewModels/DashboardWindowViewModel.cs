@@ -52,16 +52,25 @@ public partial class DashboardWindowViewModel : ViewModelBase
     {
         var userId = _session.CurrentUser?.Id ?? 0;
         var ownerCaption = OwnerCaption;
-        var ordered = BuildOrderedDatasetList(userId);
 
         FeaturedDatasets.Clear();
         MoreDatasets.Clear();
 
-        foreach (var dataset in ordered.Take(3))
-            FeaturedDatasets.Add(CreateItem(dataset, ownerCaption));
+        try
+        {
+            var ordered = BuildOrderedDatasetList(userId);
 
-        foreach (var dataset in ordered.Skip(3))
-            MoreDatasets.Add(CreateItem(dataset, ownerCaption));
+            foreach (var dataset in ordered.Take(3))
+                FeaturedDatasets.Add(CreateItem(dataset, ownerCaption));
+
+            foreach (var dataset in ordered.Skip(3))
+                MoreDatasets.Add(CreateItem(dataset, ownerCaption));
+        }
+        catch
+        {
+            FeaturedDatasets.Clear();
+            MoreDatasets.Clear();
+        }
 
         OnPropertyChanged(nameof(HasFeaturedDatasets));
         OnPropertyChanged(nameof(HasMoreDatasets));

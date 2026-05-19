@@ -3,12 +3,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="using:ReLPC.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="1280" d:DesignHeight="720"
+        mc:Ignorable="d" d:DesignWidth="1920" d:DesignHeight="1080"
         x:Class="ReLPC.Views.MainWindowView"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
         Title="ReLPC"
         Background="#20100B"
+        Width="1920"
+        Height="1080"
+        MinWidth="1280"
+        MinHeight="720"
         WindowStartupLocation="CenterScreen">
     <Window.Styles>
         <Style Selector="StackPanel Button">
@@ -94,6 +98,9 @@
                             </Button>
                             <Button Command="{Binding ExportPdfCommand}">
                                 <Image Source="/Assets/elements/export.png" />
+                            </Button>
+                            <Button Command="{Binding DeleteCurrentDatasetCommand}">
+                                <Image Source="/Assets/elements/trash.png" />
                             </Button>
                         </StackPanel>
 
@@ -181,6 +188,16 @@
                                 <StackPanel Orientation="Horizontal" Spacing="12">
                                     <Image Source="/Assets/elements/export.png" />
                                     <TextBlock Text="EXPORT PDF"
+                                               VerticalAlignment="Center"
+                                               Foreground="White"
+                                               FontSize="12"
+                                               FontWeight="Bold" />
+                                </StackPanel>
+                            </Button>
+                            <Button Command="{Binding DeleteCurrentDatasetCommand}">
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Image Source="/Assets/elements/trash.png" />
+                                    <TextBlock Text="DELETE DATASET"
                                                VerticalAlignment="Center"
                                                Foreground="White"
                                                FontSize="12"

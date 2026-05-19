@@ -6,8 +6,8 @@
         x:Class="ReLPC.Views.LoginWindowView"
         x:DataType="vm:LoginWindowViewModel"
         mc:Ignorable="d"
-        d:DesignWidth="1920" d:DesignHeight="1080"
-        Width="1920" Height="1080"
+        d:DesignWidth="1280" d:DesignHeight="720"
+        Width="1280" Height="720"
         MinWidth="1280" MinHeight="720"
         Title="ReLPC - Login"
         WindowStartupLocation="CenterScreen">

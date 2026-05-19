@@ -35,6 +35,8 @@ public partial class MainWindowViewModel
 
     private int _currentDatasetId;
 
+    public bool IsResettingDataset { get; private set; }
+
     partial void OnSelectedDatasetChanged(DatasetRecord? value)
     {
         if (_suppressDatasetSelection || value is null || value.Id == _currentDatasetId)
@@ -92,6 +94,30 @@ public partial class MainWindowViewModel
 
     [RelayCommand]
     private void SaveDataset() => SaveCurrentDataset();
+
+    [RelayCommand]
+    private async Task DeleteCurrentDatasetAsync()
+    {
+        if (_currentDatasetId == 0)
+        {
+            if (HostWindow is not null)
+                await MessageWindowView.ShowAsync(HostWindow, "Nothing to delete",
+                    "There is no saved dataset selected.");
+            return;
+        }
+
+        if (HostWindow is not null)
+        {
+            var confirm = new ConfirmDeleteDatasetWindowView();
+            var shouldDelete = await confirm.ShowDialog<bool>(HostWindow);
+            if (!shouldDelete)
+                return;
+        }
+
+        var userId = _sessionService.CurrentUser?.Id ?? 0;
+        _databaseService.DeleteDataset(_currentDatasetId, userId);
+        ClearCurrentDataset();
+    }
 
     [RelayCommand]
     private async Task ExportPdfAsync()
@@ -248,6 +274,30 @@ public partial class MainWindowViewModel
 
         _databaseService.UpsertDataset(dataset);
         RefreshUserDatasetsList();
+    }
+
+    private void ClearCurrentDataset()
+    {
+        _loadingDataset = true;
+        IsResettingDataset = true;
+        try
+        {
+            _currentDatasetId = 0;
+            DatasetName = string.Empty;
+            Inputs.Clear();
+            TidyRows();
+            Equation = "No Calculation Yet";
+            Coefficient = "No Calculation Yet";
+            Intermediates = "No Calculation Yet";
+            Prediction = "No Calculation Yet";
+            PredictionXText = string.Empty;
+            RefreshUserDatasetsList();
+        }
+        finally
+        {
+            IsResettingDataset = false;
+            _loadingDataset = false;
+        }
     }
 
     private void AutoSaveCurrentDataset()

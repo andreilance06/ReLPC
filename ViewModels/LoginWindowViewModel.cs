@@ -22,6 +22,7 @@ public partial class LoginWindowViewModel(
     {
         LoginStatus = "";
         var nextStatus = "";
+        var navigated = false;
         // Goldilocks Delay
         var minimumDelay = Task.Delay(1000);
 
@@ -62,12 +63,16 @@ public partial class LoginWindowViewModel(
                 sessionService,
                 windowService));
 
+            navigated = true;
             windowService.FindWindowFromDataModel(this)?.Close();
         }
         finally
         {
-            await minimumDelay;
-            LoginStatus = nextStatus;
+            if (!navigated)
+            {
+                await minimumDelay;
+                LoginStatus = nextStatus;
+            }
         }
     }
 
